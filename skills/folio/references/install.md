@@ -3,17 +3,20 @@
 folio is not on npm. You need Node 20 or later, and for plot hooks a
 Python 3.9 or later with matplotlib.
 
-## 1a. The release (quickest)
+## 1a. One command (quickest)
 
 ```sh
-curl -LO https://github.com/pakaLFZ/folio/releases/latest/download/folio.zip
-unzip folio.zip && cd folio-*/
-npm install                                       # Playwright, the only dependency
+npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
 npx playwright install chromium                   # Linux: add --with-deps if libraries are missing
+folio                                             # opens the deck list in the browser
 ```
 
-The CLI is then `node <that folder>/packages/cli/bin/folio.mjs`; go on at
-step 2 with that path in place of `~/folio`. Step 1b is only for working on
+`folio` is then on PATH; skip step 2. `folio` alone, in a terminal, opens
+the deck list of the workspace you are in, or of the default workspace
+(`$FOLIO_HOME`, else `~/Documents/folio`, else `~/folio-decks`, made on
+first use with the `lectern` pack), starting the server in the background;
+`folio stop` stops it. From a non-terminal shell it only prints the usage,
+so an agent uses the explicit commands below. Step 1b is only for working on
 folio itself.
 
 ## 1b. Clone and build from source
@@ -89,8 +92,8 @@ it. After pulling a new folio version: `pnpm install && pnpm build:web`, then
 
 ## Updating
 
-A release: download and unpack the new one, `npm install`, then `folio
-restart`. A clone:
+Installed with npm: run the same `npm install -g ...folio.tgz` again, then
+`folio restart`. A clone:
 
 ```sh
 cd ~/folio && git pull && pnpm install && pnpm build:web && folio restart

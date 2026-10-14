@@ -45,6 +45,7 @@ slide, per comment, per slot state). The warning model is `WARNINGS.md`; the edi
 | | `deck-export.md` | `folio deck export`: one zip with the deck, its pack, its hook cache and a manifest of every page; `folio deck import` with sha256 checks |
 | | `vocabulary.md` | The vocabulary bank: the user's words for slide text, one bank per deck inheriting the pack's; FOLIO-VOC-001; user edits recorded; `folio vocab` |
 | `live/` | `server-and-addresses.md` | One server per workspace, the port band held across restarts (`folio restart`), `127.0.0.1` and `::1`, `/<deck8>/`, the bootstrap |
+| | `home.md` | `folio` alone opens the deck list, starting the server in the background; the default workspace; `folio stop` |
 | | `vscode-open.md` | `folio open` and `serve --open`: VS Code's tunnel asked for through its CLI socket, stale sockets walked past |
 | | `streams.md` | One event stream per browser, resume, events against readings |
 | | `workers.md` | Agents writing slides in parallel through the CLI and the HTTP API |

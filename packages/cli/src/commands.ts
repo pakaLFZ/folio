@@ -18,6 +18,7 @@ import { boxCommand } from "./boxcmd.js";
 import { pyCommand } from "./pycmd.js";
 import { doctorCommand } from "./doctor.js";
 import { serveCommand } from "./serve.js";
+import { stopCommand } from "./homecmd.js";
 import { openCommand, restartCommand } from "./opencmd.js";
 import { shapeCommand } from "./shapecmd.js";
 import { textCommand } from "./textcmd.js";
@@ -33,6 +34,7 @@ export type Command = (args: string[]) => Promise<number>;
 
 export const COMMANDS: Record<string, Command> = {
   serve: serveCommand,
+  stop: stopCommand,
   restart: restartCommand,
   open: openCommand,
   doctor: doctorCommand,
@@ -85,6 +87,9 @@ export function usage(): string {
   return [
     "usage: folio <command> [options]",
     "",
+    "  (no command)                                   in a terminal: open the deck list, starting the server in the background;",
+    "                                                 outside a workspace, the default one ($FOLIO_HOME, ~/Documents/folio)",
+    "  stop [workspace]                               stop the workspace's server and wait until it is gone",
     "  doctor [path] [--json]                         check this machine: Node, web build, Chromium, Python and matplotlib,",
     "                                                 workspace, port; each failure with the command that fixes it (exit 1)",
     "  serve [workspace|deck] [--port N] [--expose] [--open]  serve every deck of the workspace; the port is held",

@@ -9,7 +9,10 @@
 
 - `node scripts/release.mjs` (after `pnpm build:web`, or with
   `--build-web`) writes `release/folio-<version>/` and
-  `release/folio-<version>.zip`, the asset of a GitHub release.
+  `release/folio-<version>.zip`, and `release/folio-<version>.tgz` (`npm
+  pack` of the same folder). Each release carries both, and `folio.zip` and
+  `folio.tgz` as copies, so `releases/latest/download/folio.tgz` is a stable
+  link: `npm install -g <that link>` puts `folio` on PATH (`home.md`).
 - The release needs Node 20 and Playwright only: `npm install`, then
   `npx playwright install chromium`. No pnpm, TypeScript, Vite or React.
 - `packages/cli/bin/folio.mjs` is one esbuild bundle of the CLI, the server,

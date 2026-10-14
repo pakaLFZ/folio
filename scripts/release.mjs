@@ -1,5 +1,6 @@
 /**
- * Build the minimal folio release: `release/folio-<version>/` and its `.zip`.
+ * Build the minimal folio release: `release/folio-<version>/`, its `.zip`, and the `.tgz` that
+ * `npm install -g` takes.
  *
  * The release runs with Node and Playwright alone. The CLI, the server and every npm package but Playwright are
  * bundled into `packages/cli/bin/folio.mjs`; the editor ships as its built assets only. Files keep their repository
@@ -92,4 +93,6 @@ for (const path of SHIPPED) cpSync(join(repo, path), join(out, path), { recursiv
 await bundle();
 writeManifest();
 execFileSync("zip", ["-qr", `${name}.zip`, name], { cwd: join(repo, "release") });
+execFileSync("npm", ["pack", "--silent", "--pack-destination", ".."], { cwd: out, shell: process.platform === "win32" });
 console.log(join(repo, "release", `${name}.zip`));
+console.log(join(repo, "release", `${name}.tgz`));

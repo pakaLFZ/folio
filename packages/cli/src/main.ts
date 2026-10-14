@@ -4,6 +4,7 @@
  * `--fail-on` asks for it, 2 for usage or internal faults.
  */
 import { COMMANDS, usage } from "./commands.js";
+import { homeCommand } from "./homecmd.js";
 
 /**
  * Run the command named in argv.
@@ -13,6 +14,7 @@ import { COMMANDS, usage } from "./commands.js";
  */
 async function main(argv: string[]): Promise<number> {
   const [name, ...rest] = argv;
+  if (!name && process.stdout.isTTY) return homeCommand().catch((error: Error) => (process.stderr.write(`folio: ${error.message}\n`), 2));
   const command = name ? COMMANDS[name] : undefined;
   if (!command) {
     process.stderr.write(usage());

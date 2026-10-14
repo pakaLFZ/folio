@@ -13,10 +13,13 @@ follow them.
 
 ## 0. Get folio running
 
-Run `folio doctor`. If `folio` is not found, install it first:
-[references/install.md](references/install.md) (clone, `pnpm install`,
-Chromium, the web build, a `folio` command on PATH, a workspace). Then run
-`folio doctor` again and fix each FAIL with the command printed under it.
+Run `folio doctor`. If `folio` is not found, install it:
+`npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz`
+and `npx playwright install chromium`
+([references/install.md](references/install.md) has Python, workspaces and
+building from source). Then run `folio doctor` again and fix each FAIL with
+the command printed under it. The user opens the editor by typing `folio`
+alone; you use the explicit commands.
 
 ## Starting a deck
 

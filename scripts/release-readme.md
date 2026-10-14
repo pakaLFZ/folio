@@ -17,8 +17,9 @@ npx playwright install chromium          # Linux: add --with-deps if libraries a
 node packages/cli/bin/folio.mjs doctor
 ```
 
-Make it a command: `npm link` here, or
-`alias folio="node $PWD/packages/cli/bin/folio.mjs"`.
+Make it a command: `npm install -g .` here (or install the release's `.tgz`
+straight from its URL with `npm install -g <url>`). Then `folio` alone opens
+the deck list in your browser.
 
 ## Use
 
