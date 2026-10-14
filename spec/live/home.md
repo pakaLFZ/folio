@@ -11,6 +11,11 @@
   `~/Documents/folio`, or `~/folio-decks` where there is no `Documents`
   folder; installing never downloads Chromium (`folio doctor` names the
   command).
+- "can u make the code first run auto install this, and show progress bar if
+  possible" *(user, 2026-10-15)*, about the Chromium download: a fresh
+  `pip install folio-deck` or npm install needed
+  `python -m playwright install chromium` / `npx playwright install
+  chromium` by hand, and `folio doctor` failed until it was run.
 
 ## Behaviour
 
@@ -21,6 +26,12 @@
      made with a `folio.toml` and the shipped `lectern` pack, and says so.
      Its `folio.toml` sets `[server] port = 4320`, so the home server's band
      (4320 to 4323) never takes a port that a `folio serve` elsewhere expects;
+  1a. when no server is running yet for that workspace, downloads Chromium
+     here first, in this terminal, with Playwright's own progress bar
+     (`release.md`), so the first PDF, PPTX or shot export does not have to
+     do it inside the background server. A refusal (`FOLIO_NO_BROWSER_DOWNLOAD`,
+     or the download failing) only prints its message and continues: browsing
+     the deck list needs no browser;
   2. reuses the server already running for that workspace, or starts
      `folio serve <workspace>` in the background, its output in
      `<workspace>/.folio/serve.log`, and waits until it answers (at most
@@ -46,7 +57,11 @@
 
 ## Where it lives
 
-`packages/cli/src/homecmd.ts`, `packages/cli/src/main.ts`.
+`packages/cli/src/homecmd.ts`, `packages/cli/src/main.ts`. The Chromium
+download itself is `ensureChromium()` in `packages/server/src/playwright.ts`
+(`release.md`), called here and before every other Chromium launch (`folio
+doctor`'s chromium check, `folio pdf`, `folio shot`/`check`, PPTX export, and
+a served comment's screenshots).
 
 ## Checks
 
@@ -54,3 +69,7 @@
 `lectern` and port 4320; a non-terminal `folio` prints the usage.
 `packages/cli/test/opencheck.test.ts`: the checked open stays, moves, or
 says how to forward by hand.
+`packages/server/test/playwright.test.ts`: `ensureChromium` with an injected
+executable-path check and installer — present skips the install, missing
+runs it and checks again, a failed install and the opt-out env var each
+throw a clear message naming the manual command for the channel.

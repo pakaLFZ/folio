@@ -73,6 +73,49 @@
   `pakaLFZ`, repository `folio`, workflow `publish-pypi.yml`, environment
   `pypi`.
 
+### Chromium: downloaded on first use, not on install
+
+- "can u make the code first run auto install this, and show progress bar if
+  possible" *(user, 2026-10-15)*: neither channel's install step downloads
+  Chromium; the first command that needs a browser does, once, printing
+  Playwright's own installer output (its own progress bar in a terminal; its
+  plain progress lines otherwise) rather than a second one of ours.
+- `ensureChromium(pw)`, beside `loadPlaywright()` in
+  `packages/server/src/playwright.ts`, is the one check: `existsSync` on
+  `chromium.executablePath()` (cheap once Chromium is present). On a miss it
+  prints one line — what is downloading, its approximate size, and the
+  browsers directory it goes into (`PLAYWRIGHT_BROWSERS_PATH`, else
+  Playwright's own per-OS default) — then runs Playwright's own installer
+  (`<resolved package dir>/cli.js install chromium`, `process.execPath`,
+  stdio inherited) from the same package `loadPlaywright()` resolved
+  (`FOLIO_PLAYWRIGHT`'s directory under the pip wheel, else the `playwright`
+  package an npm install put in `node_modules`). It checks again afterwards;
+  a still-missing Chromium or a nonzero exit throws, naming the manual
+  command for the channel in hand (`python -m playwright install chromium`
+  when `FOLIO_PLAYWRIGHT` is set, else `npx playwright install chromium`),
+  with the Linux `--with-deps` variant alongside it.
+- `FOLIO_NO_BROWSER_DOWNLOAD=1` refuses instead of downloading, naming the
+  same manual command, and is checked before anything is printed or run.
+- Every call site that used to call `loadPlaywright()` straight into a
+  `chromium.launch()` calls `ensureChromium()` first: `folio doctor`'s
+  chromium check (so doctor downloads instead of failing, unless the env
+  var is set), `PdfBrowser` (`folio pdf`, PPTX export), `startHeadless`'s
+  `chromium()` (`folio check`, `folio shot`, hook figure rendering), and
+  `PlaywrightShots` (a served comment's screenshots). `folio` alone (home)
+  calls it once more, explicitly, before starting the background server, so
+  the user's first run downloads in their own terminal rather than inside a
+  server they cannot see; there a refusal only warns, since opening the deck
+  list needs no browser.
+- Playwright's own installer (`playwright-core/lib/coreBundle.js`,
+  `downloadBrowserWithProgressBar`) checks its own `INSTALLATION_COMPLETE`
+  marker before it starts, downloads into a fresh temp directory, then
+  extracts straight into the shared browsers directory — it carries no lock
+  of its own around that extraction, so two folio processes starting at once
+  could both begin it. `ensureChromium` adds one: a `mkdir`-based directory
+  lock (no `recursive`, so a second taker gets `EEXIST`) around the
+  installer call, in the browsers directory itself, waited out with a
+  generous timeout rather than looped on forever.
+
 ## Checks
 
 - Unpacked elsewhere with only `npm install`: `folio doctor` all ok;
@@ -85,6 +128,12 @@
   by `python -m playwright install chromium`), `init-deck`, `pdf`, `pptx`,
   `serve` answering on a free port and stopped by PID, and
   `python -c "import folio_hook, folio_client"` (2026-10-15).
+- The same wheel with `PLAYWRIGHT_BROWSERS_PATH` pointed at an empty
+  folder, so Chromium is genuinely missing: `folio doctor` downloads it
+  (confirmed under a pseudo-terminal: Playwright's own `191.1 MiB [] NN%`
+  progress bar, then "ok chromium"), then `folio pdf` on a scratch deck
+  writes its PDF without a second download (2026-10-15). `install chromium`
+  fetches Chromium, headless shell and ffmpeg together, ~680 MB on disk.
 - `unzip -l` the wheel and grep its contents for the machine's own paths and
   the user's identifiers: none may appear (2026-10-15).
 

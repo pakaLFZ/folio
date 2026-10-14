@@ -11,7 +11,6 @@ With pip:
 
 ```sh
 pip install folio-deck
-python -m playwright install chromium             # Linux: add --with-deps if libraries are missing
 folio                                             # opens the deck list in the browser
 ```
 
@@ -19,9 +18,15 @@ Or with npm, if you already have Node 20+ on PATH:
 
 ```sh
 npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
-npx playwright install chromium                   # Linux: add --with-deps if libraries are missing
 folio                                             # opens the deck list in the browser
 ```
+
+Neither install downloads Chromium: the first run does, once, printing
+Playwright's own progress bar (`FOLIO_NO_BROWSER_DOWNLOAD=1` refuses instead
+and names the manual command). To do it ahead of time:
+`python -m playwright install chromium` (pip) or
+`npx playwright install chromium` (npm) — Linux: add `--with-deps` if system
+libraries are missing.
 
 Either way `folio` is then on PATH; skip step 2. `folio` alone, in a
 terminal, opens the deck list of the workspace you are in, or of the
@@ -38,8 +43,7 @@ git clone https://github.com/pakaLFZ/folio.git ~/folio
 cd ~/folio
 corepack enable                                   # or: npm install -g pnpm@10
 pnpm install
-pnpm exec playwright install chromium             # Linux: add --with-deps if system libraries are missing
-pnpm build:web
+pnpm build:web                                    # folio downloads Chromium on first use; to do it ahead: pnpm exec playwright install chromium (Linux: --with-deps)
 ```
 
 On Windows use PowerShell and a path such as `$HOME\folio`; the commands are
@@ -91,7 +95,7 @@ Without `--template`, `init-deck` uses the built-in pack `plain@1`.
 ## 5. Check and serve
 
 ```sh
-folio doctor            # Node, web build, Chromium, Python, matplotlib, workspace, port; each FAIL prints its fix
+folio doctor            # Node, web build, Chromium (downloads it if missing), Python, matplotlib, workspace, port; each FAIL prints its fix
 folio serve .           # the editor at http://localhost:4310 (tries 4310 to 4313)
 ```
 

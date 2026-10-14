@@ -13,9 +13,13 @@ Node 20 or later, and for plot hooks Python 3.9 or later with matplotlib.
 ```sh
 cd folio-{version}
 npm install                              # Playwright, the only dependency
-npx playwright install chromium          # Linux: add --with-deps if libraries are missing
-node packages/cli/bin/folio.mjs doctor
+node packages/cli/bin/folio.mjs doctor   # folio downloads Chromium here, once, with its own progress bar
 ```
+
+`npm install` never downloads Chromium; the first run does. To do it ahead of
+time: `npx playwright install chromium` (Linux: add `--with-deps` if system
+libraries are missing). `FOLIO_NO_BROWSER_DOWNLOAD=1` refuses the download
+instead and names that command.
 
 Make it a command: `npm install -g .` here (or install the release's `.tgz`
 straight from its URL with `npm install -g <url>`). Then `folio` alone opens

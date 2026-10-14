@@ -13,7 +13,7 @@ import { sendProblem, type Router } from "./httpkit.js";
 import { deckOr404 } from "./routes-deck.js";
 import { pageTraces } from "./hooks/slottrace.js";
 import { deckHookState } from "./hooks/state.js";
-import { loadPlaywright } from "./playwright.js";
+import { ensureChromium, loadPlaywright } from "./playwright.js";
 
 type Browser = import("playwright").Browser;
 type Page = import("playwright").Page;
@@ -203,7 +203,10 @@ export class PdfBrowser {
   /** The browser, launched on first call; refuses naming how to install it. */
   get(): Promise<Browser> {
     this.browser ??= loadPlaywright()
-      .then((p) => p.chromium.launch())
+      .then(async (p) => {
+        await ensureChromium(p);
+        return p.chromium.launch();
+      })
       .catch((error: Error) => {
         this.browser = null;
         throw new Error(`PDF export needs Playwright's Chromium: pnpm exec playwright install chromium (${error.message.split("\n")[0]})`);

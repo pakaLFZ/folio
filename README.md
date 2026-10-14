@@ -10,7 +10,6 @@ The quickest way, with Python 3.9 or later and pip:
 
 ```sh
 pip install folio-deck
-python -m playwright install chromium
 folio
 ```
 
@@ -18,9 +17,10 @@ Or with Node 20:
 
 ```sh
 npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
-npx playwright install chromium
 folio
 ```
+
+Neither install downloads Chromium; the first run does, once, with Playwright's own progress bar (`FOLIO_NO_BROWSER_DOWNLOAD=1` refuses instead and names the manual command). To do it ahead of time: `python -m playwright install chromium` (pip) or `npx playwright install chromium` (npm).
 
 `folio` alone opens the deck list in your browser, starting the server in the background (`folio stop` stops it). Outside a workspace it uses `~/Documents/folio`, made on first use. The same minimal release is on the [releases](https://github.com/pakaLFZ/folio/releases) page as a zip, and on [PyPI](https://pypi.org/project/folio-deck/) as the `folio-deck` wheel (the name `folio` was already taken). The steps below run folio from a clone of the sources.
 
@@ -35,8 +35,7 @@ corepack enable                                    # pnpm at the version package
 python3 -m venv .venv && .venv/bin/python -m pip install matplotlib
 printf '[runtimes]\npython = ".venv/bin/python"\n' > folio.local.toml
 pnpm install
-pnpm exec playwright install chromium
-pnpm build:web
+pnpm build:web                                     # folio downloads Chromium on first use; to do it ahead: pnpm exec playwright install chromium
 node packages/cli/bin/folio.mjs doctor
 node packages/cli/bin/folio.mjs serve .            # open http://localhost:4310
 ```
@@ -48,8 +47,7 @@ node packages/cli/bin/folio.mjs serve .            # open http://localhost:4310
 sudo apt install python3 python3-matplotlib
 corepack enable
 pnpm install
-pnpm exec playwright install --with-deps chromium   # --with-deps installs the libraries Chromium needs
-pnpm build:web
+pnpm build:web                                      # folio downloads Chromium on first use; to do it ahead: pnpm exec playwright install --with-deps chromium
 node packages/cli/bin/folio.mjs doctor
 node packages/cli/bin/folio.mjs serve .
 ```
@@ -62,8 +60,7 @@ winget install Python.Python.3.12                  # then open a new PowerShell,
 py -3 -m pip install matplotlib
 corepack enable
 pnpm install
-pnpm exec playwright install chromium
-pnpm build:web
+pnpm build:web                                     # folio downloads Chromium on first use; to do it ahead: pnpm exec playwright install chromium
 node packages/cli/bin/folio.mjs doctor
 node packages/cli/bin/folio.mjs serve .
 ```

@@ -2,7 +2,9 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { loadPlaywright } from "../src/playwright.js";
+import { ensureChromium, loadPlaywright, type PlaywrightModule } from "../src/playwright.js";
+
+const fakePw = { chromium: { executablePath: () => "/fake/chromium" } } as unknown as PlaywrightModule;
 
 describe("loadPlaywright", () => {
   afterEach(() => {
@@ -39,5 +41,62 @@ describe("loadPlaywright", () => {
     const dir = mkdtempSync(join(tmpdir(), "folio-playwright-empty-"));
     process.env.FOLIO_PLAYWRIGHT = dir;
     await expect(loadPlaywright()).rejects.toThrow(/has no playwright/);
+  });
+});
+
+describe("ensureChromium", () => {
+  const log: string[] = [];
+  const opts = (overrides: Partial<Parameters<typeof ensureChromium>[1]> = {}) => ({
+    log: (line: string) => log.push(line),
+    env: {},
+    ...overrides,
+  });
+
+  afterEach(() => {
+    log.length = 0;
+  });
+
+  it("does nothing, and never installs, when Chromium is already present", async () => {
+    const install = () => {
+      throw new Error("must not be called");
+    };
+    await ensureChromium(fakePw, opts({ exists: () => true, install }));
+    expect(log).toHaveLength(0);
+  });
+
+  it("runs the installer, then checks again, when Chromium is missing", async () => {
+    let present = false;
+    const install = () => {
+      present = true;
+      return true;
+    };
+    await ensureChromium(fakePw, opts({ exists: () => present, install }));
+    expect(present).toBe(true);
+    expect(log).toHaveLength(1);
+    expect(log[0]).toMatch(/downloading Chromium/);
+  });
+
+  it("throws a clear error when the installer fails", async () => {
+    await expect(ensureChromium(fakePw, opts({ exists: () => false, install: () => false }))).rejects.toThrow(/did not install/);
+  });
+
+  it("throws a clear error when the installer exits 0 but Chromium is still missing", async () => {
+    await expect(ensureChromium(fakePw, opts({ exists: () => false, install: () => true }))).rejects.toThrow(/did not install/);
+  });
+
+  it("refuses without installing when FOLIO_NO_BROWSER_DOWNLOAD is set", async () => {
+    const install = () => {
+      throw new Error("must not be called");
+    };
+    await expect(ensureChromium(fakePw, opts({ exists: () => false, install, env: { FOLIO_NO_BROWSER_DOWNLOAD: "1" } }))).rejects.toThrow(/FOLIO_NO_BROWSER_DOWNLOAD/);
+    expect(log).toHaveLength(0);
+  });
+
+  it("names the pip channel's manual command when FOLIO_PLAYWRIGHT is set", async () => {
+    await expect(ensureChromium(fakePw, opts({ exists: () => false, env: { FOLIO_PLAYWRIGHT: "/opt/playwright", FOLIO_NO_BROWSER_DOWNLOAD: "1" } }))).rejects.toThrow(/python -m playwright install chromium/);
+  });
+
+  it("names the npm channel's manual command otherwise", async () => {
+    await expect(ensureChromium(fakePw, opts({ exists: () => false, env: { FOLIO_NO_BROWSER_DOWNLOAD: "1" } }))).rejects.toThrow(/npx playwright install chromium/);
   });
 });
