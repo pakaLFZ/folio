@@ -15,9 +15,15 @@ that download instead and names the manual command.
 ## 1. One command, once the user agrees
 
 ```sh
-pip install "folio-deck==0.1.3"                   # or a newer 0.1.x
+pip install "folio-deck==0.1.3"                   # this exact version
 folio                                             # opens the deck list; downloads Chromium on first use
 ```
+
+The version is pinned and comes from PyPI only, never from a GitHub URL.
+The 0.1.3 wheel `folio_deck-0.1.3-py3-none-any.whl` has sha256
+`7115df964a0df339d154168a8d11fe9e5e21d3110bc8386325b298246bd9f319`;
+`pip download --no-deps "folio-deck==0.1.3"` then `sha256sum` (or
+`pip hash`) checks it before installing.
 
 To fetch Chromium ahead of time instead (optional, with the user's consent):
 `python -m playwright install chromium`.
@@ -81,7 +87,7 @@ task; stop it with `folio stop` when done. Each deck opens at `/<deck id>/`;
 ## Updating
 
 ```sh
-pip install --upgrade "folio-deck==0.1.4"         # or whichever version the user names
+pip install --upgrade "folio-deck==<version>"     # the exact version the user names
 folio restart
 ```
 
