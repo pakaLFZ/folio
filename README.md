@@ -1,5 +1,7 @@
 # folio
 
+[![skills.sh](https://skills.sh/b/pakaLFZ/folio)](https://skills.sh/pakaLFZ/folio)
+
 An agent-first slide framework. Slides are JSON files filled into portable template packs; a browser shows every edit live, reports text that overflows its slot, draws figures from plot hooks, and carries region comments that agents read and answer. Output is PDF.
 
 Built on [json-render](https://github.com/vercel-labs/json-render) (the catalog, the flat spec, JSON Patch). Licence: Apache-2.0.
