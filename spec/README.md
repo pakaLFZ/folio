@@ -66,4 +66,5 @@ slide, per comment, per slot state). The warning model is `WARNINGS.md`; the edi
 | | `landing.md` | The page at `/`: the deck list with search, sort and archive, the inbox link and the New deck button |
 | | `zoom.md` | Wheel and pinch zoom about the pointer, pan, back to fit; overlays follow, measurement does not |
 | `process/` | `testing.md` | How a change is checked: build, unit tests, typecheck, isolated browser checks, one full parallel run |
+| | `release.md` | The minimal release: one bundled CLI, the built editor, Node and Playwright only |
 | | `platforms.md` | Linux, macOS and Windows: the setup commands, the Python found on PATH, `folio doctor`, portable scripts, CI on all three |

@@ -1,10 +1,22 @@
 # Installing folio
 
-folio is not on npm. It runs from a clone of its repository. You need Node 20
-or later, pnpm (through corepack, which ships with Node), git, and for plot
-hooks a Python 3.9 or later with matplotlib.
+folio is not on npm. You need Node 20 or later, and for plot hooks a
+Python 3.9 or later with matplotlib.
 
-## 1. Clone and build (once per machine)
+## 1a. The release (quickest)
+
+```sh
+curl -LO https://github.com/pakaLFZ/folio/releases/latest/download/folio.zip
+unzip folio.zip && cd folio-*/
+npm install                                       # Playwright, the only dependency
+npx playwright install chromium                   # Linux: add --with-deps if libraries are missing
+```
+
+The CLI is then `node <that folder>/packages/cli/bin/folio.mjs`; go on at
+step 2 with that path in place of `~/folio`. Step 1b is only for working on
+folio itself.
+
+## 1b. Clone and build from source
 
 ```sh
 git clone https://github.com/pakaLFZ/folio.git ~/folio
@@ -76,6 +88,9 @@ it. After pulling a new folio version: `pnpm install && pnpm build:web`, then
 `folio restart`.
 
 ## Updating
+
+A release: download and unpack the new one, `npm install`, then `folio
+restart`. A clone:
 
 ```sh
 cd ~/folio && git pull && pnpm install && pnpm build:web && folio restart

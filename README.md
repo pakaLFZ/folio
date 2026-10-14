@@ -6,6 +6,8 @@ Built on [json-render](https://github.com/vercel-labs/json-render) (the catalog,
 
 ## Run it
 
+The quickest way is the minimal release: download `folio-<version>.zip` from the [releases](https://github.com/pakaLFZ/folio/releases), unpack it, run `npm install` and `npx playwright install chromium` in it, then `node packages/cli/bin/folio.mjs doctor`. It needs Node 20 and nothing else to build. The steps below run folio from a clone of the sources.
+
 You need Node 20 or later, pnpm (through corepack, which comes with Node), and a Python 3.9 or later with matplotlib for plot hooks. From a clone of this repository:
 
 **macOS** (Homebrew)

@@ -21,3 +21,6 @@ tsconfig.tsbuildinfo
 # Slide pictures from folio shot
 .shots/
 .venv/
+
+# Release builds (scripts/release.mjs)
+/release/
