@@ -115,15 +115,23 @@
   own `--tabbar-margin`, the same two tokens every tab already carries, never
   an added bottom padding of its own *(user, 2026-10-14: "gap to the bottom
   margin is a bit too big")*.
-  Its placeholder is "New comment on this slide" *(user, 2026-10-12)*. Sending creates a comment on
-  the current slide with no region: the server already falls back to the
-  whole slide's box `[0, 0, canvas.w, canvas.h]` when a comment is created
-  with `region: null` and no marks (`CommentService.create` in
-  `packages/server/src/comments/service.ts`), so no server or core change was
-  needed — the bar only sends `region: null, marks: []`. It goes through the
-  same create path as the bubble composer (`POST /:deck/comments`, via
-  `CommentsModel.sendSlide`, which mirrors `send`), so drafts, uploads and
-  screenshots behave the same; the new comment appears in the list at once,
+  Its placeholder is "New comment on this slide" *(user, 2026-10-12)*. With no
+  open draft on the current slide, sending creates a comment with no region:
+  the server already falls back to the whole slide's box `[0, 0, canvas.w,
+  canvas.h]` when a comment is created with `region: null` and no marks
+  (`CommentService.create` in `packages/server/src/comments/service.ts`), so
+  no server or core change was needed there — the bar sends `region: null,
+  marks: []`. But a rectangle, pen stroke or arrow drawn on the slide first
+  (a sketch tool's draft, open and showing on the slide the moment the tab's
+  composer is used) is not abandoned: the bar sends that draft's own `region`
+  and `marks` along with the typed text, and the draft (`draft: draft.id`) is
+  retired on the server exactly as the on-slide bubble's Send does, so "this
+  is the box" is never lost by typing in the tab instead of the bubble
+  *(user, 2026-10-15: drew a rectangle, sent from the tab's bottom bar, the
+  box never reached the comment)*. It goes through the same create path as
+  the bubble composer (`POST /:deck/comments`, via `CommentsModel.sendSlide`,
+  which mirrors `send`), so drafts, uploads and screenshots behave the same;
+  the new comment appears in the list at once,
   in execution order. With no comments the tab shows just the input bar: the
   "No comments on this slide." line is gone. In View mode the bar is not
   shown, same as the rest of the tab's write affordances. A comment just sent
@@ -301,3 +309,7 @@ screenshot opens no popup and only toggles the card; sending a comment from
 the bottom bar leaves it closed (no "Message the agent" bar) rather than
 selecting it; a reply posted with `folio comment reply` shows the unread bell
 on the closed card, and opening the card removes it.
+`e2e/comment-tools.mjs`: a rectangle drawn with the Rectangle tool, then sent
+from the tab's bottom bar (not the on-slide bubble), carries that rectangle
+as the saved comment's `marks`, and the draft is gone afterward (switching
+slides and back shows no leftover marks on the slide).

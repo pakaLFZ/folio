@@ -1,8 +1,11 @@
 // The sketch tools do not open the composer; Region does. Eraser removes only touched draft marks.
 import { chromium } from "playwright";
-import { serve } from "./lib/server.mjs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+import { serve, until } from "./lib/server.mjs";
 
 const server = await serve({ decks: ["example-b"] });
+const deck = server.deckDir("example-b");
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const failures = [];
@@ -77,6 +80,29 @@ try {
   await page.waitForTimeout(300);
   const onS001After = await count();
   check(onS001After === beforeSwitch, `switching back restores the first slide's own marks, unchanged by the one drawn elsewhere (${beforeSwitch} -> ${onS001After})`);
+
+  // A rectangle drawn with the Rectangle tool, then sent from the Comments tab's own bottom
+  // composer (not the on-slide bubble), must carry the rectangle: "I draw a box ... this is the
+  // box, if the box is not showing, bug" (user, 2026-10-15, s028). Before the fix, CommentsModel's
+  // `sendSlide` always sent `region: null, marks: []`, ignoring the open draft entirely.
+  await page.goto(`${server.base}/${server.token("example-b")}/?slide=s003`, { waitUntil: "load" });
+  await radio(/^Rectangle/).click();
+  await drag([600, 420], [700, 470]);
+  const marksBeforeSend = await count();
+  check(marksBeforeSend >= 1, "the rectangle is drawn before sending");
+  const tab = page.locator("aside").filter({ has: page.getByPlaceholder("New comment on this slide") });
+  await tab.getByPlaceholder("New comment on this slide").fill("I draw a box consider move the legend there");
+  await tab.getByRole("button", { name: "Send", exact: true }).first().click();
+  const savedFile = await until(() => {
+    if (!existsSync(join(deck, "comments"))) return null;
+    const files = readdirSync(join(deck, "comments")).filter((f) => f.endsWith(".json"));
+    return files.length ? files.sort().pop() : null;
+  });
+  const saved = JSON.parse(readFileSync(join(deck, "comments", savedFile), "utf8"));
+  check(saved.marks.length === 1 && saved.marks[0].tool === "rect", `sending from the tab composer carries the drawn rectangle as the comment's marks: ${JSON.stringify(saved.marks)}`);
+  check(!(saved.region?.[0] === 0 && saved.region?.[1] === 0 && saved.region?.[2] === 960 && saved.region?.[3] === 540), `the region is the rectangle's own box, not the whole-slide fallback: ${JSON.stringify(saved.region)}`);
+  check((await radio(/^Edit text/).getAttribute("aria-checked")) === "true", "the tool returns to Cursor after sending");
+  check((await count()) === 0, "the draft's marks are gone from the slide once the comment is sent");
 } finally {
   await browser.close();
   await server.stop();
