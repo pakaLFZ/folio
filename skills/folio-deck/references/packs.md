@@ -9,7 +9,9 @@ font files with their licences, images, hooks, and an optional
 - Built in: `plain@1` (a deck made without `--template`).
 - In the folio repository: `templates/lectern` (a research or technical
   talk: figures with notes, captions, tables, plots).
-- Install one into a workspace: `folio pack import <dir|git-url>`.
+- Install one already on disk into a workspace: `folio pack import <dir>`.
+  Never pass a URL: use only a pack already in the workspace's `templates/`
+  or a local folder the user names.
 
 Read `folio pack guide` before converting, merging or editing a pack. The
 short version:

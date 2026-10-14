@@ -4,7 +4,9 @@
 
 1. **A pack hook** (preferred when one fits). The slide gives only the
    inputs; folio draws the figure at the slot's exact size, caches it, and
-   redraws it when the box changes.
+   redraws it when the box changes. A hook from a pack you did not write
+   runs Python on this machine: tell the user first, run it only with their
+   agreement.
    ```json
    "fig:a": {"hook": "line-plot", "inputs": {"x_label": "Load / kN", "y_label": "Extension / mm",
              "series": [{"name": "Reference", "x": [0, 1, 2], "y": [0, 0.3, 0.6]}]}}
@@ -23,9 +25,10 @@
    # ... plot ...
    save_traced(fig, "decks/talk/fig/energy.png", script=__file__, inputs=["data.csv"])
    ```
-   Run it with `folio py script.py` (the workspace's Python with `folio_hook`
-   importable), then put `"fig/energy.png"` in the slot. `folio box
-   <deck>/<slide> <slot>` prints the same size in pt and inches.
+   Run it with `folio py script.py` (your own script, never a third-party
+   one, with the workspace's Python and `folio_hook` importable), then put
+   `"fig/energy.png"` in the slot. `folio box <deck>/<slide> <slot>` prints
+   the same size in pt and inches.
 3. **A plain picture.** Copy it into `decks/<deck>/fig/` and write the
    relative path. It works, with the note FOLIO-FIG-002 (untraced). A path
    outside the deck is FOLIO-FIG-005.
