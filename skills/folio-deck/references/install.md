@@ -1,9 +1,21 @@
 # Installing folio
 
-folio is not on npm. You need Node 20 or later, and for plot hooks a
-Python 3.9 or later with matplotlib.
+folio is not on npm (its name there is taken), but is on PyPI as
+`folio-deck`. Either way you need Node 20 or later (pip installs bundle their
+own, through Playwright) or a Node on PATH, and for plot hooks a Python 3.9
+or later with matplotlib.
 
 ## 1a. One command (quickest)
+
+With pip:
+
+```sh
+pip install folio-deck
+python -m playwright install chromium             # Linux: add --with-deps if libraries are missing
+folio                                             # opens the deck list in the browser
+```
+
+Or with npm, if you already have Node 20+ on PATH:
 
 ```sh
 npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
@@ -11,13 +23,13 @@ npx playwright install chromium                   # Linux: add --with-deps if li
 folio                                             # opens the deck list in the browser
 ```
 
-`folio` is then on PATH; skip step 2. `folio` alone, in a terminal, opens
-the deck list of the workspace you are in, or of the default workspace
-(`$FOLIO_HOME`, else `~/Documents/folio`, else `~/folio-decks`, made on
-first use with the `lectern` pack), starting the server in the background;
-`folio stop` stops it. From a non-terminal shell it only prints the usage,
-so an agent uses the explicit commands below. Step 1b is only for working on
-folio itself.
+Either way `folio` is then on PATH; skip step 2. `folio` alone, in a
+terminal, opens the deck list of the workspace you are in, or of the
+default workspace (`$FOLIO_HOME`, else `~/Documents/folio`, else
+`~/folio-decks`, made on first use with the `lectern` pack), starting the
+server in the background; `folio stop` stops it. From a non-terminal shell
+it only prints the usage, so an agent uses the explicit commands below.
+Step 1b is only for working on folio itself.
 
 ## 1b. Clone and build from source
 

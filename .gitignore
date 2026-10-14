@@ -24,3 +24,10 @@ tsconfig.tsbuildinfo
 
 # Release builds (scripts/release.mjs)
 /release/
+
+# The pip wheel build (scripts/wheel.mjs)
+/python/folio_deck/_dist/
+/dist-pip/
+*.whl
+*.tar.gz
+

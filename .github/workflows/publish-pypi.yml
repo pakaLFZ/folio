@@ -1,0 +1,53 @@
+# Publish the `folio-deck` wheel to PyPI through Trusted Publishing
+# (spec/process/release.md). Runs on a published GitHub release, or by hand.
+name: publish-pypi
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build wheel
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: web build
+        run: pnpm -s build:web
+
+      - name: build the wheel
+        run: node scripts/wheel.mjs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: folio-deck-dist
+          path: dist-pip/
+
+  publish:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: folio-deck-dist
+          path: dist-pip/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist-pip/
