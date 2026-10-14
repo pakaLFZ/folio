@@ -3,8 +3,8 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "folio-deck",
-      "description": "Make, fix and review slide decks with folio: install it, write slides into template packs, draw figures, convert PowerPoint templates, and answer the user's comments from the live editor.",
+      "title": "Slide decks your agent writes and you review live",
+      "description": "Slides are JSON filled into template packs. A browser editor shows each edit as it lands, flags text that overflows its box, and draws figures from plot scripts. Circle a region of a slide, leave a comment, and the agent answers it. Exports PDF and editable PPTX, and turns your own PowerPoint template into a pack.",
       "skills": ["folio-deck"]
     }
   ]
