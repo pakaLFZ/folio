@@ -16,9 +16,9 @@ export interface AppSpec {
 }
 
 /** Holder to app. */
-export type HolderMessage = { type: "retire"; pid?: number; forwardPort?: number } | { type: "restart-failed"; error: string };
+export type HolderMessage = { type: "retire"; pid?: number; forwardPort?: number } | { type: "restart-failed"; error: string } | { type: "forward-port"; port: number };
 /** App to holder. */
-export type AppMessage = { type: "ready"; port: number; lines: string[] } | { type: "restart" };
+export type AppMessage = { type: "ready"; port: number; lines: string[] } | { type: "restart" } | { type: "forward-port" };
 
 const DRAIN_MS = 5000;
 
@@ -59,6 +59,7 @@ export async function serveApp(spec: AppSpec): Promise<number> {
   app.watchDecks();
   const services = attachServices(app, true);
   const pending: ServerResponse[] = [];
+  const forwardAsks: ServerResponse[] = [];
   const server = createFolioServer(app, {
     prefix: spec.prefix,
     extraRoutes: (router) => {
@@ -66,6 +67,10 @@ export async function serveApp(spec: AppSpec): Promise<number> {
       router.on("POST", "/api/restart", (_req, res) => {
         pending.push(res);
         send({ type: "restart" });
+      });
+      router.on("POST", "/api/forward-port", (_req, res) => {
+        forwardAsks.push(res);
+        send({ type: "forward-port" });
       });
     },
   });
@@ -75,6 +80,7 @@ export async function serveApp(spec: AppSpec): Promise<number> {
   const leave = (replacement?: number, forwardPort?: number) => void (leaving || ((leaving = true), retire(app, services, server, pending, replacement, forwardPort)));
   process.on("message", (message: HolderMessage) => {
     if (message.type === "retire") leave(message.pid, message.forwardPort);
+    else if (message.type === "forward-port") for (const res of forwardAsks.splice(0)) sendJson(res, 200, { port: message.port });
     else for (const res of pending.splice(0)) sendProblem(res, 500, "Restart failed", message.error);
   });
   process.on("disconnect", () => leave());

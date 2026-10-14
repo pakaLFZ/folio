@@ -58,13 +58,21 @@ function supervise(holder: PortHolder, spec: AppSpec, first: Launched, record: (
   let restarting = false;
   let stopping = false;
   const watch = (launched: Launched) => {
-    launched.child.on("message", (message: AppMessage) => message.type === "restart" && void restart());
+    launched.child.on("message", (message: AppMessage) => {
+      if (message.type === "restart") void restart();
+      if (message.type === "forward-port") void forwardPort().then((port) => tell(launched, { type: "forward-port", port }));
+    });
     launched.child.on("exit", (code) => {
       if (launched !== current || stopping) return;
       process.stderr.write(`folio: the app stopped (exit ${code ?? "on a signal"}); folio serve stops\n`);
       stop(code ?? 1);
     });
   };
+  const forwardPort = () =>
+    holder.freshForwardPort().catch((error: Error) => {
+      process.stderr.write(`folio: could not bind a fresh VS Code forward port: ${error.message}\n`);
+      return holder.port;
+    });
   const restart = async () => {
     if (restarting) return;
     restarting = true;
@@ -75,11 +83,7 @@ function supervise(holder: PortHolder, spec: AppSpec, first: Launched, record: (
       watch(next);
       holder.setTarget(next.port);
       record(next);
-      const forwardPort = await holder.freshForwardPort().catch((error: Error) => {
-        process.stderr.write(`folio: could not bind a fresh VS Code forward port: ${error.message}\n`);
-        return holder.port;
-      });
-      tell(old, { type: "retire", pid: next.child.pid, forwardPort });
+      tell(old, { type: "retire", pid: next.child.pid, forwardPort: await forwardPort() });
       process.stdout.write(restartedLine(holder.port, old.child.pid, next.child.pid));
     } catch (error) {
       process.stderr.write(`folio: restart failed, the old app keeps serving: ${(error as Error).message}\n`);

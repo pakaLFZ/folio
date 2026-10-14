@@ -16,7 +16,8 @@ import { findServer } from "./queuecmds.js";
 const SHIPPED_PACK = fileURLToPath(new URL("../../../templates/lectern/", import.meta.url));
 const START_MS = 20_000;
 const STOP_MS = 15_000;
-const WORKSPACE_TOML = '[workspace]\ndecks = "decks"\ntemplates = "templates"\n';
+export const HOME_PORT = 4320;
+const WORKSPACE_TOML = `[workspace]\ndecks = "decks"\ntemplates = "templates"\n\n[server]\nport = ${HOME_PORT}\n`;
 
 /** Where `folio` alone works outside any workspace. */
 export function defaultWorkspace(home = homedir(), env = process.env): string {
@@ -62,14 +63,23 @@ export function browserCommand(platform = process.platform, env = process.env): 
   return spawnSync("xdg-open", ["--version"], { stdio: "ignore" }).error ? null : ["xdg-open"];
 }
 
-/** Open the URL in the local browser, else through VS Code's forward, else print it. */
-async function openHome(url: string): Promise<void> {
+/** A loopback port no VS Code forward has seen, passing to the same server; the server's own port when it cannot give one. */
+export async function freshForwardUrl(base: string): Promise<string> {
+  const res = await fetch(`${base}/api/forward-port`, { method: "POST", signal: AbortSignal.timeout(5000) }).catch(() => null);
+  const port = res?.ok ? ((await res.json()) as { port?: number }).port : undefined;
+  const url = new URL(`${base}/`);
+  if (port) url.port = String(port);
+  return url.href;
+}
+
+/** Open the deck list in the local browser, else through a fresh VS Code forward, else print it. */
+async function openHome(base: string): Promise<void> {
   const browser = browserCommand();
   if (browser) {
-    spawn(browser[0]!, [...browser.slice(1), url], { detached: true, stdio: "ignore", windowsHide: true }).unref();
-    process.stdout.write(`opened ${url}\n`);
-  } else if (process.env.SSH_CONNECTION || process.env.SSH_TTY) await openAndSay(url);
-  else process.stdout.write(`open ${url} in a browser\n`);
+    spawn(browser[0]!, [...browser.slice(1), `${base}/`], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+    process.stdout.write(`opened ${base}/\n`);
+  } else if (process.env.SSH_CONNECTION || process.env.SSH_TTY) await openAndSay(await freshForwardUrl(base));
+  else process.stdout.write(`open ${base}/ in a browser\n`);
 }
 
 /** `folio` alone, in a terminal. */
@@ -81,7 +91,7 @@ export async function homeCommand(): Promise<number> {
   const running = await findServer({ config });
   const base = running ?? (await startServer(config));
   process.stdout.write(`${running ? "folio is serving" : "started folio for"} ${root} at ${base}/\n`);
-  await openHome(`${base}/`);
+  await openHome(base);
   process.stdout.write("the server keeps running; folio stop stops it\n");
   return 0;
 }

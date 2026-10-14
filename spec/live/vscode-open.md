@@ -57,6 +57,9 @@
   restart is only ever asked for on a server the user is looking at, so
   this is the one automatic open; plain `folio serve` still opens nothing.
   *(design choice, 2026-10-14)*
+- `folio` alone, in an SSH session, makes the same request on a fresh
+  forward port too (`home.md`): `POST /api/forward-port` asks the holder for
+  one without restarting the app.
 - `folio serve --open` makes the same request once the app is listening, for
   `/`, and prints the same line. It runs after the address lines are printed
   and is never awaited by the start: no VS Code means one printed line, not a
