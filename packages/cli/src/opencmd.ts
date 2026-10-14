@@ -37,9 +37,12 @@ interface OpenPort {
   loads: number;
 }
 
+const ASK_MS = 15_000;
+
+/** One question to the server; null when it does not answer in time (a holder older than `/api/open-port` never does). */
 async function askServer<T>(base: string, path: string, body?: unknown): Promise<T | null> {
   const init = body === undefined ? {} : { method: "POST", body: JSON.stringify(body), headers: { "content-type": "application/json" } };
-  const res = await fetch(`${base}${path}`, init).catch(() => null);
+  const res = await fetch(`${base}${path}`, { ...init, signal: AbortSignal.timeout(ASK_MS) }).catch(() => null);
   return res?.ok ? ((await res.json()) as T) : null;
 }
 
