@@ -1,27 +1,37 @@
 # Installing folio
 
+If `folio` is already on PATH, nothing here is needed. Otherwise, before
+installing anything, tell the user what you are about to install and ask
+them to confirm — do not install on your own say-so.
+
 folio is not on npm (its name there is taken), but is on PyPI as
 `folio-deck`. Either way you need Node 20 or later (pip installs bundle their
 own, through Playwright) or a Node on PATH, and for plot hooks a Python 3.9
-or later with matplotlib.
+or later with matplotlib. Chromium (for PDF, PPTX and screenshot output) is
+downloaded by Playwright, either by folio itself the first time one of those
+runs, or ahead of time with the command below.
 
-## 1a. One command (quickest)
+## 1a. One command (quickest), once the user agrees
 
-With pip:
+Prefer pip, a registry package, pinned to a version for reproducibility:
 
 ```sh
-pip install folio-deck
+pip install "folio-deck==0.1.3"                   # or a newer 0.1.x
 python -m playwright install chromium             # Linux: add --with-deps if libraries are missing
 folio                                             # opens the deck list in the browser
 ```
 
-Or with npm, if you already have Node 20+ on PATH:
+Or with npm, if you already have Node 20+ on PATH, from a pinned release
+asset — never `.../releases/latest/...`, which moves:
 
 ```sh
-npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
+npm install -g https://github.com/pakaLFZ/folio/releases/download/v0.1.3/folio-0.1.3.tgz
 npx playwright install chromium                   # Linux: add --with-deps if libraries are missing
 folio                                             # opens the deck list in the browser
 ```
+
+Check the asset exists before running the npm line:
+`gh release view v0.1.3 -R pakaLFZ/folio`.
 
 Either way `folio` is then on PATH; skip step 2. `folio` alone, in a
 terminal, opens the deck list of the workspace you are in, or of the
@@ -47,14 +57,19 @@ the same.
 
 ## 2. A `folio` command
 
-The CLI is `node <clone>/packages/cli/bin/folio.mjs`. Make it `folio`:
+The CLI is `node <clone>/packages/cli/bin/folio.mjs`. This never needs
+editing a shell startup file on its own: either tell the user the line to
+add, or run it yourself only once they have agreed.
 
-- macOS and Linux: add `alias folio="node $HOME/folio/packages/cli/bin/folio.mjs"`
-  to `~/.bashrc` or `~/.zshrc`, or write a two-line script on PATH:
-  `#!/bin/sh` and `exec node "$HOME/folio/packages/cli/bin/folio.mjs" "$@"`.
-- Windows PowerShell: add
-  `function folio { node "$HOME\folio\packages\cli\bin\folio.mjs" @args }` to
-  `$PROFILE`.
+- macOS and Linux: a two-line script on PATH —
+  `#!/bin/sh` and `exec node "$HOME/folio/packages/cli/bin/folio.mjs" "$@"` —
+  needs no startup-file edit. The alternative, if the user wants it, is
+  `alias folio="node $HOME/folio/packages/cli/bin/folio.mjs"` added to
+  `~/.bashrc` or `~/.zshrc`; tell them the line, or add it yourself only
+  with their agreement.
+- Windows PowerShell: the equivalent line for `$PROFILE` is
+  `function folio { node "$HOME\folio\packages\cli\bin\folio.mjs" @args }`;
+  same rule — tell the user, or edit it only with their agreement.
 
 In a non-interactive shell where aliases do not load, call the `node ...`
 line directly.
