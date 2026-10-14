@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { createServer } from "node:net";
 import { join } from "node:path";
-import { describeRuntime, FolioApp, hookEnv, MIN_PYTHON, PORT_BAND, relative, runtimeExe, staleWebBuild, WEB_DIST, type WorkspaceConfig } from "@folio/server";
+import { describeRuntime, FolioApp, hookEnv, loadPlaywright, MIN_PYTHON, PORT_BAND, relative, runtimeExe, staleWebBuild, WEB_DIST, type WorkspaceConfig } from "@folio/server";
 import { findServer } from "./queuecmds.js";
 
 export interface DoctorCheck {
@@ -42,7 +42,7 @@ export function webBuildCheck(dist = WEB_DIST): DoctorCheck {
 export async function chromiumCheck(platform: NodeJS.Platform = process.platform): Promise<DoctorCheck> {
   const fix = platform === "linux" ? "pnpm exec playwright install --with-deps chromium" : "pnpm exec playwright install chromium";
   try {
-    const { chromium } = await import("playwright");
+    const { chromium } = await loadPlaywright();
     const browser = await chromium.launch({ timeout: 30_000 });
     const version = browser.version();
     await browser.close();

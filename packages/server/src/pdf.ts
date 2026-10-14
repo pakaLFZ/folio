@@ -13,6 +13,7 @@ import { sendProblem, type Router } from "./httpkit.js";
 import { deckOr404 } from "./routes-deck.js";
 import { pageTraces } from "./hooks/slottrace.js";
 import { deckHookState } from "./hooks/state.js";
+import { loadPlaywright } from "./playwright.js";
 
 type Browser = import("playwright").Browser;
 type Page = import("playwright").Page;
@@ -201,7 +202,7 @@ export class PdfBrowser {
 
   /** The browser, launched on first call; refuses naming how to install it. */
   get(): Promise<Browser> {
-    this.browser ??= import("playwright")
+    this.browser ??= loadPlaywright()
       .then((p) => p.chromium.launch())
       .catch((error: Error) => {
         this.browser = null;

@@ -6,7 +6,15 @@ Built on [json-render](https://github.com/vercel-labs/json-render) (the catalog,
 
 ## Run it
 
-The quickest way, with Node 20:
+The quickest way, with Python 3.9 or later and pip:
+
+```sh
+pip install folio-deck
+python -m playwright install chromium
+folio
+```
+
+Or with Node 20:
 
 ```sh
 npm install -g https://github.com/pakaLFZ/folio/releases/latest/download/folio.tgz
@@ -14,7 +22,7 @@ npx playwright install chromium
 folio
 ```
 
-`folio` alone opens the deck list in your browser, starting the server in the background (`folio stop` stops it). Outside a workspace it uses `~/Documents/folio`, made on first use. The same minimal release is on the [releases](https://github.com/pakaLFZ/folio/releases) page as a zip. The steps below run folio from a clone of the sources.
+`folio` alone opens the deck list in your browser, starting the server in the background (`folio stop` stops it). Outside a workspace it uses `~/Documents/folio`, made on first use. The same minimal release is on the [releases](https://github.com/pakaLFZ/folio/releases) page as a zip, and on [PyPI](https://pypi.org/project/folio-deck/) as the `folio-deck` wheel (the name `folio` was already taken). The steps below run folio from a clone of the sources.
 
 You need Node 20 or later, pnpm (through corepack, which comes with Node), and a Python 3.9 or later with matplotlib for plot hooks. From a clone of this repository:
 
