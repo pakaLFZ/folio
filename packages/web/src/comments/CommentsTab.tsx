@@ -99,7 +99,7 @@ export function CommentsTab({ state, model }: { store: DeckStore; state: DeckSta
   const slide = state.current;
   const onSend = (text: string, uploads: Upload[]) => (slide ? model.sendSlide(slide, text, uploads) : undefined);
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2 py-2">
+    <div className="flex h-full min-h-0 flex-col gap-2 pt-2">
       <div className="min-h-0 flex-1 overflow-y-auto">
         {issues.length ? (
           <ul className="flex flex-col gap-2">

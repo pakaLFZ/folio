@@ -109,6 +109,12 @@
   issue cards (same left and right edges); the issue list scrolls in the
   space above it, the bar itself never scrolling with it *(user, 2026-10-12;
   moved to the bottom 2026-10-14, "move this to the button of the tab")*.
+  Its bottom sits no further from the tab bar than every other tab's content:
+  the tab's own `pt-2` holds the top gap above the list, and the bottom gap
+  is only the panel body's existing `--panel-pad` padding plus the tab bar's
+  own `--tabbar-margin`, the same two tokens every tab already carries, never
+  an added bottom padding of its own *(user, 2026-10-14: "gap to the bottom
+  margin is a bit too big")*.
   Its placeholder is "New comment on this slide" *(user, 2026-10-12)*. Sending creates a comment on
   the current slide with no region: the server already falls back to the
   whole slide's box `[0, 0, canvas.w, canvas.h]` when a comment is created
