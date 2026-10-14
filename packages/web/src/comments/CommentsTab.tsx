@@ -10,9 +10,10 @@
  * the card. Resolve is an icon at the card's top-left, shown while the
  * pointer or keyboard focus is in the card, and the reply input bar does its
  * own job without toggling the card. A region comment's draft is written in
- * the bubble on the canvas; at the top of the tab, above the list, an input
- * bar makes a whole-slide comment (no region) straight from the list, the
- * same create path as the bubble. Selecting an issue draws it on the slide in
+ * the bubble on the canvas; at the bottom of the tab, pinned just above the
+ * tab bar, an input bar makes a whole-slide comment (no region) straight
+ * from the list, the same create path as the bubble — the issue list
+ * scrolls in the space above it. Selecting an issue draws it on the slide in
  * Edit. In View the list is read-only: no
  * input bar, no Resolve. A closed card with an unread reply shows a bell at
  * the same top-left corner; selecting the card clears it. A comment that was
@@ -98,13 +99,15 @@ export function CommentsTab({ state, model }: { store: DeckStore; state: DeckSta
   const slide = state.current;
   const onSend = (text: string, uploads: Upload[]) => (slide ? model.sendSlide(slide, text, uploads) : undefined);
   return (
-    <div className="flex flex-col gap-2 py-2">
+    <div className="flex h-full min-h-0 flex-col gap-2 py-2">
+      <div className="min-h-0 flex-1 overflow-y-auto">
+        {issues.length ? (
+          <ul className="flex flex-col gap-2">
+            {issues.map((c) => <Issue key={c.id} c={c} model={model} selected={model.focus === c.id} readOnly={readOnly} onSelect={() => select(c)} />)}
+          </ul>
+        ) : null}
+      </div>
       {readOnly || !slide ? null : <InputBar placeholder="New comment on this slide" onSend={onSend} upload={model.upload} uploadUrl={model.uploadUrl} />}
-      {issues.length ? (
-        <ul className="flex flex-col gap-2">
-          {issues.map((c) => <Issue key={c.id} c={c} model={model} selected={model.focus === c.id} readOnly={readOnly} onSelect={() => select(c)} />)}
-        </ul>
-      ) : null}
     </div>
   );
 }

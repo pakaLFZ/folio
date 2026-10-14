@@ -44,6 +44,11 @@
   (past the "Inbox / Search" header), with a red box drawn from the board
   columns' top edge downward: "make the floating panel's top align the top
   of other columns" *(user, 2026-10-13)*.
+- A screenshot of the Comments tab's right panel, with the new-comment
+  composer (paperclip, "New comment on this slide" input, Send) marked at
+  the top of the tab: "move this to the button of the tab" *(user,
+  2026-10-14)*, meaning the bottom, just above the tab bar (layers /
+  Comments / outline), with the issue list scrolling above it.
 
 ## Behaviour
 
@@ -99,8 +104,11 @@
   card or the card holds keyboard focus, on every card, selected or not. The
   first bubble's row keeps a 32 px left inset so the icon never covers it. In
   View mode there is no Resolve. *(user, 2026-10-12)*
-- **A new-comment input bar sits at the top of the Comments tab**, above the
-  issue list, the same width as the issue cards (same left and right edges).
+- **A new-comment input bar sits at the bottom of the Comments tab**, pinned
+  just above the tab bar (layers / Comments / outline), the same width as the
+  issue cards (same left and right edges); the issue list scrolls in the
+  space above it, the bar itself never scrolling with it *(user, 2026-10-12;
+  moved to the bottom 2026-10-14, "move this to the button of the tab")*.
   Its placeholder is "New comment on this slide" *(user, 2026-10-12)*. Sending creates a comment on
   the current slide with no region: the server already falls back to the
   whole slide's box `[0, 0, canvas.w, canvas.h]` when a comment is created
@@ -278,12 +286,12 @@ opens it (closing it first does not swallow the next open); the panel's
 header holds exactly one line of text (the title) and names neither the
 comment's slots nor its followers anywhere in the header.
 `e2e/comments.mjs`: a Comments tab issue has no bell or status
-text; the tab's top input bar sends a whole-slide comment (no region) that
+text; the tab's bottom input bar sends a whole-slide comment (no region) that
 appears in the list at once, lines up with the issue cards' left and right
 edges, and is absent in View mode; with no comments the tab shows only the
 input bar, no "No comments on this slide." text; clicking empty card space
 toggles the issue's region exactly like the bubble does; clicking the region
 screenshot opens no popup and only toggles the card; sending a comment from
-the top bar leaves it closed (no "Message the agent" bar) rather than
+the bottom bar leaves it closed (no "Message the agent" bar) rather than
 selecting it; a reply posted with `folio comment reply` shows the unread bell
 on the closed card, and opening the card removes it.
