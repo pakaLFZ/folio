@@ -71,10 +71,16 @@ delete. Split from `editing.md` (2026-10-13) when it passed 500 lines.
 - **The note.** While the active tool is one of Region, Pen, Rectangle,
   Arrow or Eraser (Undo is an action, never an active tool), a small card
   above the toolbar, in the same rounded-card/border-line/bg-surface style
-  as the tool tooltips, reads "Draft marks for comments: they do not edit
-  the slide." It hides the moment Cursor, the Shape tool or the Text tool is
-  current. It takes no pointer events, so it never blocks the canvas or the
-  toolbar underneath it.
+  and type size as the tool tooltips, reads "Draft marks only: they don't
+  edit the slide." It hides the moment Cursor, the Shape tool or the Text
+  tool is current. It takes no pointer events, so it never blocks the canvas
+  or the toolbar underneath it.
+- **One line, sized to its text** (2026-10-15, asked as "can u make this one
+  line and occupy minimum area"). The card does not wrap (`whitespace-nowrap`)
+  and does not take a fixed or full width (`w-fit`): it is exactly as wide as
+  its text plus the tooltip's own `px-2.5 py-1.5` padding, the smallest
+  padding already in the toolbar's style, centred above the toolbar as
+  before.
 
 ### Shapes in the editor
 

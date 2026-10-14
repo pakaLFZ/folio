@@ -45,8 +45,8 @@ export function CommentToolbar({ model, state, shape }: { model: CommentsModel; 
   return (
     <div data-chrome="sketch-toolbar" className="pointer-events-none fixed bottom-[calc(var(--scene-bottom,0px)+var(--panel-inset)+var(--glass-edge-w)+var(--tabbar-margin)-2px)] left-[var(--scene-left,0px)] right-[var(--scene-right,0px)] z-[20] flex flex-col items-center gap-2 px-3">
       {draftNote ? (
-        <div className="max-w-72 rounded-card border border-line bg-surface px-2.5 py-1.5 text-center text-[12px] leading-snug text-ink shadow-[var(--glass-lift)]">
-          Draft marks for comments: they do not edit the slide.
+        <div className="w-fit whitespace-nowrap rounded-card border border-line bg-surface px-2.5 py-1.5 text-[12px] leading-snug text-ink shadow-[var(--glass-lift)]">
+          Draft marks only: they don&apos;t edit the slide.
         </div>
       ) : null}
       {state.mode === "edit" ? (
