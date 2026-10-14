@@ -9,7 +9,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
-import { findWorkspace, loadConfig, readJson } from "@folio/server";
+import { ensureChromium, findWorkspace, loadConfig, loadPlaywright, readJson } from "@folio/server";
 import { openChecked } from "./opencmd.js";
 import { findServer } from "./queuecmds.js";
 
@@ -39,6 +39,15 @@ export function ensureWorkspace(dir: string, pack = SHIPPED_PACK): boolean {
 }
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Downloads Chromium here, in the caller's terminal, rather than leaving the first PDF/PPTX/shot to do it inside the background server. A refusal (opt-out or a failed download) only warns: browsing decks needs no browser. */
+async function downloadChromiumHere(): Promise<void> {
+  try {
+    await ensureChromium(await loadPlaywright());
+  } catch (error) {
+    process.stderr.write(`${(error as Error).message}\n`);
+  }
+}
 
 /** Start `folio serve <root>` detached, its output in `.folio/serve.log`; resolves with the base URL once it answers. */
 async function startServer(config: { root: string; port: number }): Promise<string> {
@@ -80,6 +89,7 @@ export async function homeCommand(): Promise<number> {
   if (ensureWorkspace(root)) process.stdout.write(`made the folio workspace ${root} with the lectern pack\n`);
   const config = loadConfig(root);
   const running = await findServer({ config });
+  if (!running) await downloadChromiumHere();
   const base = running ?? (await startServer(config));
   process.stdout.write(`${running ? "folio is serving" : "started folio for"} ${root} at ${base}/\n`);
   await openHome(base);

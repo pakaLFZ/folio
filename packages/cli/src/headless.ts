@@ -5,7 +5,7 @@
  */
 import type { AddressInfo } from "node:net";
 import type { Server } from "node:http";
-import { createFolioServer, FolioApp, loadConfig, loadPlaywright, openPrintPage, staleWebBuild, type Measured, type WorkspaceConfig } from "@folio/server";
+import { createFolioServer, ensureChromium, FolioApp, loadConfig, loadPlaywright, openPrintPage, staleWebBuild, type Measured, type WorkspaceConfig } from "@folio/server";
 
 type Browser = import("playwright").Browser;
 type Page = import("playwright").Page;
@@ -23,11 +23,14 @@ export interface Headless {
  * @returns the chromium launcher.
  */
 async function chromium() {
+  let pw;
   try {
-    return (await loadPlaywright()).chromium;
+    pw = await loadPlaywright();
   } catch {
     throw new Error("Playwright is not installed; run: pnpm add -w playwright@1.62.1 && pnpm exec playwright install chromium");
   }
+  await ensureChromium(pw);
+  return pw.chromium;
 }
 
 /**

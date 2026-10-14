@@ -9,7 +9,7 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import type { FolioComment } from "@folio/core";
 import type { DeckStore } from "../deckstore.js";
-import { loadPlaywright } from "../playwright.js";
+import { ensureChromium, loadPlaywright } from "../playwright.js";
 import { shotsDir } from "./store.js";
 import type { ShotTaker } from "./service.js";
 
@@ -28,8 +28,9 @@ export class PlaywrightShots implements ShotTaker {
 
   private async launch(): Promise<Browser | null> {
     try {
-      const { chromium } = await loadPlaywright();
-      return await chromium.launch();
+      const pw = await loadPlaywright();
+      await ensureChromium(pw);
+      return await pw.chromium.launch();
     } catch (error) {
       this.missing = `comment screenshots need Playwright: pnpm add -w playwright@1.62.1 && pnpm exec playwright install chromium (${(error as Error).message.split("\n")[0]})`;
       process.stderr.write(`${this.missing}\n`);
