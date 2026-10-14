@@ -7,9 +7,9 @@ import { installSkill, lineDiff, quickstartCommand, SHIPPED_SKILL, skillDir, ski
 const temp = () => mkdtempSync(join(tmpdir(), "folio-skill-"));
 
 describe("folio skill", () => {
-  it("ships a skill named folio that arms the watch", () => {
+  it("ships a skill named folio-deck that arms the watch", () => {
     const text = readFileSync(join(SHIPPED_SKILL, "SKILL.md"), "utf8");
-    expect(text).toMatch(/^---\nname: folio\ndescription: /);
+    expect(text).toMatch(/^---\nname: folio-deck\ndescription: /);
     expect(text).toContain("folio watch --deck");
     expect(text.split("\n").length).toBeLessThan(130);
   });
@@ -38,11 +38,11 @@ describe("folio skill", () => {
     const home = temp();
     expect(skillHint(ws, home)).toMatch(/folio skill install/);
     expect(installSkill(skillDir("project", ws, home), false).status).toBe("installed");
-    expect(readFileSync(join(ws, ".claude/skills/folio/SKILL.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "SKILL.md"), "utf8"));
-    expect(readFileSync(join(ws, ".claude/skills/folio/references/quickstart.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "references/quickstart.md"), "utf8"));
+    expect(readFileSync(join(ws, ".claude/skills/folio-deck/SKILL.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "SKILL.md"), "utf8"));
+    expect(readFileSync(join(ws, ".claude/skills/folio-deck/references/quickstart.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "references/quickstart.md"), "utf8"));
     expect(installSkill(skillDir("project", ws, home), false).status).toBe("unchanged");
     expect(skillHint(ws, home)).toBeNull();
-    expect(installSkill(skillDir("user", ws, home), false).dir).toBe(join(home, ".claude/skills/folio"));
+    expect(installSkill(skillDir("user", ws, home), false).dir).toBe(join(home, ".claude/skills/folio-deck"));
     expect(skillHint(temp(), home)).toBeNull();
   });
   it("refuses a changed copy naming the diff, and replaces it with force", () => {

@@ -27,7 +27,7 @@ const SHIPPED = [
   "folio.toml",
   "docs/pack-guide.md",
   "docs/warnings.md",
-  "skills/folio",
+  "skills/folio-deck",
   "templates/lectern",
   "packages/server/packs",
   "packages/web/dist",

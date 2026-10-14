@@ -199,7 +199,7 @@ link to a conversation and the adoption of older files; `routes.ts`),
 questionnaire message, `markQuestion`), `packages/cli/src/askcmds.ts`,
 `packages/cli/src/services.ts` (registers the routes, adopts older files in
 `folio serve`), `packages/core/src/catalog.ts` (the prompt section),
-`skills/folio/SKILL.md`, `packages/web/src/questions/` (`useQuestions.ts`,
+`skills/folio-deck/SKILL.md`, `packages/web/src/questions/` (`useQuestions.ts`,
 `QuestionForm.tsx`, `QuestionFields.tsx`, `QuestionMessage.tsx`),
 `packages/web/src/comments/Chat.tsx` and `CommentsTab.tsx` (drawing it in the
 thread), `packages/web/src/extensions.tsx` (`?question=` routing, the rail's

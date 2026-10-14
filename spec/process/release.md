@@ -21,7 +21,7 @@
   so what it reads beside itself resolves as in a clone.
 - What ships, at its repository path: the built editor (`packages/web/dist`),
   the built-in packs, `templates/lectern`, `python/folio_hook` and
-  `python/folio_client`, `skills/folio`, `docs/pack-guide.md`,
+  `python/folio_client`, `skills/folio-deck`, `docs/pack-guide.md`,
   `docs/warnings.md`, `folio.toml`, `LICENSE`, and a release `README.md`
   (`scripts/release-readme.md`). No web sources, tests, e2e, spec or
   TypeScript.

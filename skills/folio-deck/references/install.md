@@ -71,7 +71,7 @@ mkdir talks && cd talks
 printf '[workspace]\ndecks = "decks"\ntemplates = "templates"\n' > folio.toml
 folio pack import ~/folio/templates/lectern       # install a pack into this workspace
 folio init-deck decks/my-talk --template lectern@1 --title "My talk"
-folio skill install                               # this skill, into .claude/skills/folio/
+folio skill install                               # this skill, into .claude/skills/folio-deck/
 ```
 
 Without `--template`, `init-deck` uses the built-in pack `plain@1`.

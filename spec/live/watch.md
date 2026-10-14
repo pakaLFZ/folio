@@ -69,8 +69,9 @@
 
 ### The folio skill
 
-- folio ships an agent skill in the Agent Skills layout, `skills/folio/`:
-  `SKILL.md` (`name: folio`, a description that triggers on any folio or
+- folio ships an agent skill in the Agent Skills layout, `skills/folio-deck/`:
+  `SKILL.md` (`name: folio-deck`, the name skills.sh lists, "change the name
+  on skills.sh to folio-deck" *(user, 2026-10-14)*; a description that triggers on any folio or
   slide-deck task) and `references/` (`install.md`, `quickstart.md`,
   `comments.md`, `figures.md`, `packs.md`, `cli.md`), read only when a step
   needs them. It is the one thing an agent needs: with only the skill it can
@@ -88,8 +89,8 @@
   `folio viewing`, `folio shot --sheet`, `folio check`, `folio ask`).
 - `folio skill install [--project | --user] [--force]` copies the whole
   folder, `references/` included, to
-  `<workspace>/.claude/skills/folio/` (the default) or
-  `~/.claude/skills/folio/`. An installed copy that differs from the shipped
+  `<workspace>/.claude/skills/folio-deck/` (the default) or
+  `~/.claude/skills/folio-deck/`. An installed copy that differs from the shipped
   one is not overwritten without `--force`; the refusal prints the lines that
   differ (`-` installed, `+` shipped) and the command that replaces it. An
   identical copy is reported as already installed. `folio skill show` prints
@@ -133,7 +134,7 @@
   take another pack's names from `folio layouts`. On PowerShell, where a
   heredoc does not exist, the JSON goes in a file passed as `--props p.json`.
 - Its text is one file shipped with the skill,
-  `skills/folio/references/quickstart.md`, so `folio skill install` copies it
+  `skills/folio-deck/references/quickstart.md`, so `folio skill install` copies it
   with `SKILL.md` and the two never drift.
 
 ## Never
@@ -162,8 +163,8 @@ or not at all is not yet confirmed.
 
 `packages/core/src/watchevents.ts` (what counts as an event, and its line),
 `packages/cli/src/eventwatch.ts` (`folio watch`), `packages/cli/src/skillcmd.ts`
-(`folio skill`, `folio quickstart`, the hint), `skills/folio/SKILL.md`,
-`skills/folio/references/`,
+(`folio skill`, `folio quickstart`, the hint), `skills/folio-deck/SKILL.md`,
+`skills/folio-deck/references/`,
 `packages/core/src/catalog.ts` (the prompt line).
 
 ## Checks

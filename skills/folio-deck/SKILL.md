@@ -1,5 +1,5 @@
 ---
-name: folio
+name: folio-deck
 description: Make, fix and review slide decks with folio, an agent-first slide framework (JSON slides in template packs, a live browser editor, PDF and editable PPTX out). Use whenever the user asks for slides, a deck, a talk or a presentation built with folio, mentions folio.toml, decks/<name>/slides/*.json, the folio CLI, its editor, comments, the inbox or questionnaires, or wants a PowerPoint turned into a folio template. Covers installing folio, writing slides, figures, templates and answering the user's comments live.
 ---
 

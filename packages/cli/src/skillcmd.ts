@@ -1,11 +1,11 @@
 /**
  * `folio skill show | install [--project | --user] [--force]`: the agent skill
- * folio ships (`skills/folio/`, `SKILL.md` and `references/`), which tells
+ * folio ships (`skills/folio-deck/`, `SKILL.md` and `references/`), which tells
  * every agent how to install folio, write a deck and keep a watch on the
  * user's comments. Install copies the folder to the workspace's
- * `.claude/skills/folio/` or the user's `~/.claude/skills/folio/`, and never
+ * `.claude/skills/folio-deck/` or the user's `~/.claude/skills/folio-deck/`, and never
  * overwrites a copy that differs without `--force`. `folio quickstart` prints
- * the worked example shipped with it (`skills/folio/references/quickstart.md`).
+ * the worked example shipped with it (`skills/folio-deck/references/quickstart.md`).
  */
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
@@ -15,9 +15,9 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { findWorkspace } from "@folio/server";
 
-export const SHIPPED_SKILL = fileURLToPath(new URL("../../../skills/folio/", import.meta.url));
+export const SHIPPED_SKILL = fileURLToPath(new URL("../../../skills/folio-deck/", import.meta.url));
 export const QUICKSTART = join(SHIPPED_SKILL, "references", "quickstart.md");
-const SKILL_PATH = join(".claude", "skills", "folio");
+const SKILL_PATH = join(".claude", "skills", "folio-deck");
 
 export type SkillScope = "project" | "user";
 

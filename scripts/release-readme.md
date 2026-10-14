@@ -27,11 +27,11 @@ the deck list in your browser.
 folio init-deck decks/talk --template lectern@1 --title "My talk"
 folio serve .                            # the editor at http://localhost:4310
 folio quickstart                         # a worked example, empty deck to pptx
-folio skill install                      # the agent skill, into .claude/skills/folio/
+folio skill install                      # the agent skill, into .claude/skills/folio-deck/
 ```
 
 This folder is a workspace (`folio.toml`). For another one, make a folder with
 a `folio.toml` holding `[workspace]` `decks = "decks"` `templates =
 "templates"`, then `folio pack import <this folder>/templates/lectern`.
 
-Agents: everything an agent needs is in `skills/folio/SKILL.md`.
+Agents: everything an agent needs is in `skills/folio-deck/SKILL.md`.
