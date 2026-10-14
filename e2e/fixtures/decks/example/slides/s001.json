@@ -1,0 +1,14 @@
+{
+  "root": "s",
+  "elements": {
+    "s": {
+      "type": "title",
+      "props": {
+        "title": "CO_{2} UPTAKE (A WORKED EXAMPLE)",
+        "author": "A. Person",
+        "background": "plain"
+      },
+      "children": []
+    }
+  }
+}

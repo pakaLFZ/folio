@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.folio/
+folio.local.toml
+__pycache__/
+*.egg-info/
+/scratch/
+packages/**/.archive/
+
+# Unpublished research decks: kept on disk, not in the repository
+reference/pptx/*.pptx
+# Archives left by test runs
+decks/.archive/
+decks/*/comments/.archive/
+decks/*/slides/.archive/
+
+# Agent worktrees and typecheck output
+.claude/worktrees/
+tsconfig.tsbuildinfo
+
+# Slide pictures from folio shot
+.shots/
+.venv/

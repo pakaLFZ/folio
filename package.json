@@ -1,0 +1,24 @@
+{
+  "name": "folio-workspace",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "build:web": "pnpm --filter @folio/web build",
+    "folio": "tsx packages/cli/src/main.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "esbuild": "0.28.2",
+    "playwright": "1.62.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
+  }
+}

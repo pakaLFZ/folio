@@ -1,0 +1,14 @@
+{
+  "root": "s",
+  "elements": {
+    "s": {
+      "type": "note-figure",
+      "props": {
+        "title": "SECOND DECK",
+        "note": "A second deck, for the multi-deck stream check.",
+        "caption": "The caption of the second deck"
+      },
+      "children": []
+    }
+  }
+}

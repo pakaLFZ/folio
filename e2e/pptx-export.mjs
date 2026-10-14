@@ -1,0 +1,77 @@
+// The Download menu serves one PowerPoint slide per deck slide, and the folio deck archive, without workspace writes.
+import { chromium } from "playwright";
+import { createRequire } from "node:module";
+import { readdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { serve } from "./lib/server.mjs";
+import { downloadBytes } from "./lib/page.mjs";
+
+const requireServer = createRequire(new URL("../packages/server/package.json", import.meta.url));
+const { unzipSync, strFromU8 } = requireServer("fflate");
+const server = await serve({ decks: ["example-b"] });
+const code = 'def greet(name):\n    return "A&B < C"\n\ndef finish():\n    return 42';
+const codeFile = join(server.root, "pptx-block-fixture.py");
+writeFileSync(codeFile, code);
+server.cli(["block", "add", "decks/example-b/s001", "--style", "code", "--box", "80,320,760,180", "--code-file", codeFile, "--columns", "2"]);
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, acceptDownloads: true });
+const folder = dirname(server.deckDir("example-b"));
+const before = JSON.stringify(readdirSync(folder).sort());
+const checks = [];
+const check = (name, ok, detail = "") => { checks.push(ok); console.log(`${ok ? "PASS" : "FAIL"}  ${name}  ${detail}`); };
+try {
+  await page.goto(`${server.base}/${server.token("example-b")}/`, { waitUntil: "load" });
+  const trigger = page.getByRole("button", { name: "Download", exact: true });
+  await trigger.click();
+  check("the menu offers PDF, PowerPoint and the folio deck in that order", JSON.stringify(await page.getByRole("menuitem").allTextContents()) === JSON.stringify(["PDF", "PowerPoint (.pptx)", "Folio deck (.folio.zip)"]), (await page.getByRole("menuitem").allTextContents()).join(", "));
+  await page.keyboard.press("Escape");
+  check("Escape closes the menu", await page.getByRole("menuitem", { name: "PDF", exact: true }).count() === 0);
+  await trigger.click();
+  await page.locator("main").click({ position: { x: 15, y: 15 } });
+  check("clicking away closes the menu", await page.getByRole("menuitem", { name: "PDF", exact: true }).count() === 0);
+  await trigger.click();
+  const downloadPromise = page.waitForEvent("download", { timeout: 180_000 });
+  await page.getByRole("menuitem", { name: "PowerPoint (.pptx)" }).click();
+  const download = await downloadPromise;
+  const files = unzipSync(await downloadBytes(download));
+  const slideFiles = Object.keys(files).filter((p) => /^ppt\/slides\/slide\d+\.xml$/.test(p));
+  const manifest = await (await page.request.get(`${server.base}/${server.token("example-b")}/manifest`)).json();
+  check("PowerPoint attachment has the deck name", download.suggestedFilename() === "example-b.pptx", download.suggestedFilename());
+  check("one slide part per deck slide", slideFiles.length === manifest.slides.length, `${slideFiles.length} / ${manifest.slides.length}`);
+  check("the package links slides, layouts and content types", !!files["ppt/presentation.xml"] && !!files["ppt/slideMasters/slideMaster1.xml"] && slideFiles.every((p) => !!files[p.replace("slides/", "slides/_rels/") + ".rels"]) && strFromU8(files["[Content_Types].xml"]).includes("presentationml.slide+xml"));
+  const printPage = await browser.newPage();
+  await printPage.goto(`${server.base}/${server.token("example-b")}/?print=1&slides=s001`, { waitUntil: "load" });
+  await printPage.waitForFunction(() => window.__FOLIO_READY__ === true);
+  const box = await printPage.locator('section[data-slide="s001"] [data-slot="block:a"]').evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    const slide = el.closest(".folio-slide").getBoundingClientRect();
+    return [r.left - slide.left, r.top - slide.top, r.width, r.height].map((n) => Math.round(n * 0.75 * 12700));
+  });
+  await printPage.close();
+  const slide = strFromU8(files["ppt/slides/slide1.xml"]);
+  const picture = slide.match(/<p:pic><p:nvPicPr><p:cNvPr[^>]*name="block:a"[^>]*\/>[\s\S]*?<\/p:pic>/)?.[0] ?? "";
+  const encodedCode = code.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;").replaceAll("\n", "&#10;");
+  const blockTextShape = [...slide.matchAll(/<p:sp>[\s\S]*?<\/p:sp>/g)].some(([shape]) => /<p:cNvPr[^>]*name="block:a"/.test(shape));
+  check("two-column code block is a picture with searchable code alt text", picture.includes(`descr="${encodedCode}"`) && !blockTextShape);
+  check("block picture uses the rendered print-page box", picture.includes(`<a:off x="${box[0]}" y="${box[1]}"/>`) && picture.includes(`<a:ext cx="${box[2]}" cy="${box[3]}"/>`), box.join(","));
+  const embed = picture.match(/<a:blip r:embed="([^"]+)"/)?.[1];
+  const slideRels = strFromU8(files["ppt/slides/_rels/slide1.xml.rels"]);
+  const mediaName = [...slideRels.matchAll(/<Relationship\b[^>]*\/>/g)].map(([xml]) => ({ id: xml.match(/\bId="([^"]+)"/)?.[1], target: xml.match(/\bTarget="([^"]+)"/)?.[1] })).find((rel) => rel.id === embed)?.target?.replace("../media/", "");
+  const media = mediaName && `ppt/media/${mediaName}`;
+  const pixels = media ? [Buffer.from(files[media]).readUInt32BE(16), Buffer.from(files[media]).readUInt32BE(20)] : [];
+  check("block image is captured at 3x device scale", pixels[0] >= box[2] / 12700 * 4 - 2 && pixels[1] >= box[3] / 12700 * 4 - 2, pixels.join("x"));
+  await trigger.click();
+  const folioPromise = page.waitForEvent("download", { timeout: 60_000 });
+  await page.getByRole("menuitem", { name: "Folio deck (.folio.zip)" }).click();
+  const folioDownload = await folioPromise;
+  const archive = unzipSync(await downloadBytes(folioDownload));
+  const archived = archive["manifest.json"] ? JSON.parse(strFromU8(archive["manifest.json"])) : null;
+  check("folio deck attachment has the deck name", folioDownload.suggestedFilename() === "example-b.folio.zip", folioDownload.suggestedFilename());
+  check("the folio deck zip holds deck.json, the pack and a manifest of every slide", !!archive["decks/example-b/deck.json"] && Object.keys(archive).some((p) => /^templates\/[^/]+\/pack\.json$/.test(p)) && archived?.slides.length === manifest.slides.length, `${Object.keys(archive).length} entries`);
+  check("nothing was written to the workspace decks folder", JSON.stringify(readdirSync(folder).sort()) === before && !readdirSync(server.deckDir("example-b")).some((f) => f.endsWith(".folio.zip")));
+} finally {
+  await browser.close();
+  await server.stop();
+}
+console.log(`${checks.filter(Boolean).length}/${checks.length} passed`);
+process.exit(checks.every(Boolean) ? 0 : 1);

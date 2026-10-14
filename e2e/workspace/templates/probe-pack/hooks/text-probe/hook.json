@@ -1,0 +1,11 @@
+{
+  "name": "text-probe",
+  "version": 1,
+  "output": "text",
+  "description": "Test text hook: upper-cases the text; FAIL in the text fails, LONG makes six lines, NOTEXT answers nothing.",
+  "runtime": "python",
+  "command": ["transform.py"],
+  "entry": "transform:transform",
+  "timeout": 5,
+  "inputs": { "type": "string" }
+}

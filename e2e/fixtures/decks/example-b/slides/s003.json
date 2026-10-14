@@ -1,0 +1,13 @@
+{
+  "root": "s",
+  "elements": {
+    "s": {
+      "type": "note-figure",
+      "props": {
+        "title": "FROM PYTHON",
+        "caption": "Set from folio_client"
+      },
+      "children": []
+    }
+  }
+}

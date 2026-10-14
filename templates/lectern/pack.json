@@ -1,0 +1,2815 @@
+{
+  "name": "lectern",
+  "version": 1,
+  "description": "16:9 deck for research and technical talks: serif titles over a hairline rule, sans text, one vermilion accent, figure pages with labels, notes, captions and tables.",
+  "usage": {
+    "when": "A research talk or technical update, shown on a 16:9 screen.",
+    "how": "Open with title, put separator before each part, tell each result in two pages (note-wide-figure, then plot-table or profile-pictures), close with summary-table and closing. Values go in tables, paragraphs explain causes. The general layouts (title-and-content, two-content and the image grids) cover pages the result kinds do not."
+  },
+  "canvas": {
+    "w": 960,
+    "h": 540,
+    "unit": "pt"
+  },
+  "fontFallback": "IBM Plex Sans, Helvetica, Arial, sans-serif",
+  "fonts": [
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/IBMPlexSans-Regular.ttf",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/IBMPlexSans-Bold.ttf",
+      "weight": 700,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/IBMPlexSans-Italic.ttf",
+      "weight": 400,
+      "style": "italic"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "file": "fonts/IBMPlexSans-BoldItalic.ttf",
+      "weight": 700,
+      "style": "italic"
+    },
+    {
+      "family": "IBM Plex Serif",
+      "file": "fonts/IBMPlexSerif-SemiBold.ttf",
+      "weight": 600,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Serif",
+      "file": "fonts/IBMPlexSerif-SemiBoldItalic.ttf",
+      "weight": 600,
+      "style": "italic"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "fonts/IBMPlexMono-Regular.ttf",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "IBM Plex Mono",
+      "file": "fonts/IBMPlexMono-Bold.ttf",
+      "weight": 700,
+      "style": "normal"
+    }
+  ],
+  "roles": {
+    "title": {
+      "font": "IBM Plex Serif",
+      "size": 24,
+      "weight": 600,
+      "lineHeight": 1.2,
+      "wrap": false
+    },
+    "subtitle": {
+      "size": 18,
+      "lineHeight": 1.25,
+      "wrap": false
+    },
+    "body": {
+      "size": 20,
+      "lineHeight": 1.35
+    },
+    "label": {
+      "size": 13,
+      "weight": 700,
+      "lineHeight": 1.3,
+      "wrap": false
+    },
+    "caption": {
+      "size": 13,
+      "italic": true,
+      "lineHeight": 1.3,
+      "wrap": false
+    },
+    "note": {
+      "size": 15,
+      "lineHeight": 1.45
+    },
+    "body-18": {
+      "size": 18,
+      "lineHeight": 1.38
+    },
+    "footnote": {
+      "size": 9,
+      "lineHeight": 1.3,
+      "wrap": false
+    },
+    "set-id": {
+      "font": "IBM Plex Mono",
+      "size": 9.5,
+      "lineHeight": 1.3,
+      "align": "right",
+      "color": "#7A776F",
+      "wrap": false
+    },
+    "cover-title": {
+      "font": "IBM Plex Serif",
+      "size": 52,
+      "weight": 600,
+      "lineHeight": 1.1,
+      "anchor": "bottom"
+    },
+    "cover-subtitle": {
+      "size": 28,
+      "lineHeight": 1.25
+    },
+    "cover-author": {
+      "size": 18,
+      "lineHeight": 1.35
+    },
+    "cover-author-right": {
+      "size": 18,
+      "lineHeight": 1.35,
+      "align": "right"
+    },
+    "closing-title": {
+      "font": "IBM Plex Serif",
+      "size": 52,
+      "weight": 600,
+      "lineHeight": 1.1,
+      "anchor": "top"
+    },
+    "agenda-title": {
+      "font": "IBM Plex Serif",
+      "size": 40,
+      "weight": 600,
+      "lineHeight": 1.1
+    },
+    "large-text": {
+      "font": "IBM Plex Serif",
+      "size": 46,
+      "weight": 600,
+      "lineHeight": 1.15
+    },
+    "wordmark": {
+      "size": 13,
+      "weight": 700,
+      "lineHeight": 1.2,
+      "transform": "uppercase",
+      "wrap": false
+    }
+  },
+  "backgrounds": {
+    "plain": {
+      "fill": "#FFFFFF",
+      "ink": "#17191C"
+    },
+    "smoke": {
+      "fill": "#F4F3EF",
+      "ink": "#17191C"
+    },
+    "khaki": {
+      "fill": "#F6F1E3",
+      "ink": "#17191C"
+    },
+    "black": {
+      "fill": "#15181C",
+      "ink": "#FFFFFF"
+    }
+  },
+  "tables": {
+    "default": {
+      "description": "Ruled rows on the page: a bold header on a pale warm band, a hairline under the header and between body rows, no outer border, no vertical rules.",
+      "font": null,
+      "size": 14,
+      "lineHeight": 1.25,
+      "align": "left",
+      "header": true,
+      "headerWeight": 700,
+      "headerFill": "#EFEDE7",
+      "headerInk": "#17191C",
+      "cellPad": [
+        4.5,
+        9,
+        4.5,
+        9
+      ],
+      "rule": {
+        "color": "#CFCBC2",
+        "width": 0.75,
+        "outer": false,
+        "rows": true,
+        "columns": false
+      }
+    }
+  },
+  "colors": {
+    "magenta": "#9C2E6B",
+    "red": "#C23A1E",
+    "orange": "#C9701A",
+    "green": "#2E7650",
+    "smoke": "#F2F1ED",
+    "rose": "#FBECE6"
+  },
+  "shapes": {
+    "default": {
+      "description": "A plain outline in the background's ink, 1.25 pt, no fill.",
+      "fill": null,
+      "stroke": "ink",
+      "strokeWidth": 1.25
+    },
+    "accent": {
+      "description": "A vermilion 2 pt outline, no fill: to point at or ring something on a figure.",
+      "fill": null,
+      "stroke": "red",
+      "strokeWidth": 2
+    }
+  },
+  "blocks": {
+    "card": {
+      "description": "A white card with a hairline border; text flows over two columns and the card grows with it.",
+      "kind": "text",
+      "fill": "#FFFFFF",
+      "border": {
+        "color": "#CFCBC2",
+        "width": 0.75
+      },
+      "radius": 3,
+      "padding": 14,
+      "columns": 2,
+      "columnGap": 24,
+      "grow": true,
+      "text": {
+        "size": 15,
+        "lineHeight": 1.4
+      }
+    },
+    "callout": {
+      "description": "A pale vermilion box under a vermilion rule: a key point, a definition or a caveat.",
+      "kind": "text",
+      "fill": "rose",
+      "border": {
+        "color": "red",
+        "width": 2,
+        "side": "top"
+      },
+      "padding": 14,
+      "columns": 1,
+      "grow": true,
+      "text": {
+        "size": 18,
+        "lineHeight": 1.35
+      }
+    },
+    "code": {
+      "description": "Source code in IBM Plex Mono on a pale warm panel, highlighted; python unless the slide names another language.",
+      "kind": "code",
+      "fill": "smoke",
+      "radius": 3,
+      "padding": 14,
+      "grow": true,
+      "text": {
+        "font": "IBM Plex Mono",
+        "size": 13,
+        "lineHeight": 1.45
+      },
+      "language": "python",
+      "lineNumbers": false,
+      "syntax": {
+        "keyword": "#9C2E6B",
+        "string": "#2E7650",
+        "comment": "#8A867D",
+        "number": "#C23A1E",
+        "function": "#1F4E8C",
+        "type": "#1F4E8C",
+        "meta": "#8A867D"
+      }
+    }
+  },
+  "layouts": {
+    "title": {
+      "description": "Title page: the talk name large in serif above a ruled footer, the presenter at the bottom right.",
+      "usage": {
+        "when": "The first page of a deck.",
+        "how": "title holds the talk name in at most two lines; a qualifier may follow on the second line in brackets. author holds the presenter's name, right-aligned, with the affiliation or date on a second line. There is no subtitle; use title-classic for one."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            112,
+            800,
+            300
+          ],
+          "style": "cover-title",
+          "lines": 2,
+          "placeholder": "Talk title (qualifier)",
+          "hook": "chem-subscripts"
+        },
+        "author": {
+          "role": "body",
+          "box": [
+            492,
+            450,
+            420,
+            60
+          ],
+          "style": "cover-author-right",
+          "placeholder": "Presenter\nAffiliation or date"
+        }
+      }
+    },
+    "separator": {
+      "description": "Section separator on the dark background: one section name large above the ruled footer.",
+      "usage": {
+        "when": "Between parts of a talk, before the first page of each part.",
+        "how": "title holds the section name in one or two lines. Nothing else goes on the page."
+      },
+      "background": "black",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            112,
+            800,
+            300
+          ],
+          "style": "cover-title",
+          "lines": 2,
+          "placeholder": "Section name",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "closing": {
+      "description": "Closing page on the dark background: one large line such as Thank you, and a contact line under the rule.",
+      "usage": {
+        "when": "The last page of a talk.",
+        "how": "title holds the closing line; contact names the presenter or an address on at most two lines."
+      },
+      "background": "black",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            200,
+            800,
+            140
+          ],
+          "style": "closing-title",
+          "placeholder": "Thank you",
+          "hook": "chem-subscripts"
+        },
+        "contact": {
+          "role": "body",
+          "box": [
+            48,
+            450,
+            560,
+            60
+          ],
+          "style": "cover-author",
+          "placeholder": "Presenter and contact"
+        }
+      }
+    },
+    "note-figure": {
+      "description": "A note on the left and one labelled figure on the right.",
+      "usage": {
+        "when": "An abstract, or one result that needs a paragraph beside its figure.",
+        "how": "note holds the paragraph. label:a names the figure as (a) ...; fig:a takes a picture made at its box size or the line-plot hook. The caption is optional."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence stating the main finding",
+          "hook": "chem-subscripts"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            48,
+            118,
+            384,
+            360
+          ],
+          "placeholder": "The question, why it matters, what was found and what it means, in plain words.",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            464,
+            118,
+            448,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) What the figure plots",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            464,
+            140,
+            448,
+            338
+          ],
+          "hook": "line-plot",
+          "placeholder": "Figure, drawn at its box size"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "note-wide-figure": {
+      "description": "Method page: a narrow note on the left and one wide example figure on the right.",
+      "usage": {
+        "when": "The first of a result's two pages: what was done, with one example such as a snapshot or a sequence.",
+        "how": "note says what was done; label:a and fig:a show one example; the caption names the view and the marks."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what was done",
+          "hook": "chem-subscripts"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            48,
+            118,
+            272,
+            360
+          ],
+          "placeholder": "What was done, how, and under which conditions.",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            352,
+            118,
+            560,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Example",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            352,
+            140,
+            560,
+            338
+          ],
+          "placeholder": "Example picture, drawn at its box size"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "three-figures": {
+      "description": "Three labelled figures in a row, an optional key at the top right, and a one-line caption.",
+      "usage": {
+        "when": "Three parallel views or cases side by side: one object seen three ways, three conditions, three samples.",
+        "how": "label:a to label:c name the panels as (a) ...; fig:a to fig:c take pictures made at their box size or the line-plot hook; fig:k is an optional key for all three."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the three figures show",
+          "hook": "chem-subscripts"
+        },
+        "fig:k": {
+          "role": "figure",
+          "box": [
+            752,
+            118,
+            160,
+            26
+          ],
+          "description": "key or legend picture",
+          "placeholder": "Key"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            150,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Case",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            172,
+            272.0,
+            280
+          ],
+          "hook": "line-plot",
+          "placeholder": "Figure a"
+        },
+        "label:b": {
+          "role": "label",
+          "box": [
+            344.0,
+            150,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(b) Case",
+          "hook": "chem-subscripts"
+        },
+        "fig:b": {
+          "role": "figure",
+          "box": [
+            344.0,
+            172,
+            272.0,
+            280
+          ],
+          "hook": "line-plot",
+          "placeholder": "Figure b"
+        },
+        "label:c": {
+          "role": "label",
+          "box": [
+            640.0,
+            150,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(c) Case",
+          "hook": "chem-subscripts"
+        },
+        "fig:c": {
+          "role": "figure",
+          "box": [
+            640.0,
+            172,
+            272.0,
+            280
+          ],
+          "hook": "line-plot",
+          "placeholder": "Figure c"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "profile-pictures": {
+      "description": "A profile plot at the top left and three pictures in a row beneath it.",
+      "usage": {
+        "when": "One series of states: a profile along a coordinate and the pictures at the points it marks.",
+        "how": "fig:a is the profile, its marks pointing at exactly the states pictured in fig:b to fig:d; label:b to label:d give each picture's place on the coordinate. fig:k is the key; fig:legend is optional."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what changes along the profile",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            118,
+            416.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Profile along the coordinate",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            140,
+            416.0,
+            150
+          ],
+          "hook": "line-plot",
+          "placeholder": "Profile"
+        },
+        "fig:k": {
+          "role": "figure",
+          "box": [
+            496.0,
+            140,
+            160,
+            40
+          ],
+          "description": "key beside the profile",
+          "placeholder": "Key"
+        },
+        "fig:legend": {
+          "role": "figure",
+          "box": [
+            496.0,
+            196,
+            416.0,
+            24
+          ],
+          "description": "optional extra legend row",
+          "placeholder": "Legend"
+        },
+        "label:b": {
+          "role": "label",
+          "box": [
+            48,
+            306,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(b) Coordinate = 0.00",
+          "hook": "chem-subscripts"
+        },
+        "fig:b": {
+          "role": "figure",
+          "box": [
+            48,
+            328,
+            272.0,
+            150
+          ],
+          "placeholder": "Picture b"
+        },
+        "label:c": {
+          "role": "label",
+          "box": [
+            344.0,
+            306,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(c) Coordinate = 0.50",
+          "hook": "chem-subscripts"
+        },
+        "fig:c": {
+          "role": "figure",
+          "box": [
+            344.0,
+            328,
+            272.0,
+            150
+          ],
+          "placeholder": "Picture c"
+        },
+        "label:d": {
+          "role": "label",
+          "box": [
+            640.0,
+            306,
+            272.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(d) Coordinate = 1.00",
+          "hook": "chem-subscripts"
+        },
+        "fig:d": {
+          "role": "figure",
+          "box": [
+            640.0,
+            328,
+            272.0,
+            150
+          ],
+          "placeholder": "Picture d"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "plot-table": {
+      "description": "A plot on the left and a table of its values on the right, with a note that follows the table down.",
+      "usage": {
+        "when": "The second of a result's two pages: all the data with a trend, the values in a table.",
+        "how": "fig:a holds the plot; table:b holds the values, one line per row; note explains a cause only, never a value, and starts below the table whatever its length."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on the trend",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            118,
+            416.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Quantity against a parameter",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            140,
+            416.0,
+            338
+          ],
+          "hook": "line-plot",
+          "placeholder": "Plot with its fit line"
+        },
+        "table-label:b": {
+          "role": "label",
+          "box": [
+            496.0,
+            118,
+            416.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(b) Value of each case",
+          "hook": "chem-subscripts"
+        },
+        "table:b": {
+          "role": "table",
+          "box": [
+            496.0,
+            140,
+            416.0,
+            220
+          ],
+          "tableStyle": "default",
+          "placeholder": "Table of values"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            496.0,
+            300,
+            416.0,
+            178
+          ],
+          "below": {
+            "slot": "table:b",
+            "gap": 14
+          },
+          "placeholder": "What causes the trend, in plain words.",
+          "hook": "chem-subscripts"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "plot-table-below": {
+      "description": "A short plot with a note under it on the left, and a tall table on the right.",
+      "usage": {
+        "when": "As plot-table when the table has many rows or four columns.",
+        "how": "fig:a holds the plot and note sits under it; table:b holds the values, one line per row."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on the trend",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            118,
+            416.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Quantity against a parameter",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            140,
+            416.0,
+            196
+          ],
+          "hook": "line-plot",
+          "placeholder": "Plot"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            48,
+            352,
+            416.0,
+            126
+          ],
+          "placeholder": "What causes the trend, in plain words.",
+          "hook": "chem-subscripts"
+        },
+        "table-label:b": {
+          "role": "label",
+          "box": [
+            496.0,
+            118,
+            416.0,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(b) Value of each case",
+          "hook": "chem-subscripts"
+        },
+        "table:b": {
+          "role": "table",
+          "box": [
+            496.0,
+            140,
+            416.0,
+            338
+          ],
+          "tableStyle": "default",
+          "placeholder": "Table of values"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "plot-note": {
+      "description": "A plot on the left and a note on the right.",
+      "usage": {
+        "when": "A result whose plot needs a paragraph but no table.",
+        "how": "fig:a holds the plot; note explains it."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            118,
+            512,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Quantity against a parameter",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            140,
+            512,
+            338
+          ],
+          "hook": "line-plot",
+          "placeholder": "Plot with its fit line"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            592,
+            140,
+            320,
+            338
+          ],
+          "placeholder": "What the plot shows and why, in plain words.",
+          "hook": "chem-subscripts"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "summary-table": {
+      "description": "One full-width table with a note that follows it down.",
+      "usage": {
+        "when": "A summary that lists every case with its values, over as many pages as it needs.",
+        "how": "table:a holds every row, one line each; note follows the table and may stay empty."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the table lists",
+          "hook": "chem-subscripts"
+        },
+        "table-label:a": {
+          "role": "label",
+          "box": [
+            48,
+            118,
+            864,
+            20
+          ],
+          "lines": 1,
+          "placeholder": "(a) Values of every case",
+          "hook": "chem-subscripts"
+        },
+        "table:a": {
+          "role": "table",
+          "box": [
+            48,
+            140,
+            864,
+            318
+          ],
+          "tableStyle": "default",
+          "placeholder": "Table of every case"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            48,
+            454,
+            864,
+            24
+          ],
+          "below": {
+            "slot": "table:a",
+            "gap": 12
+          },
+          "placeholder": "A note on the table.",
+          "hook": "chem-subscripts"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            494,
+            864,
+            22
+          ],
+          "lines": 1,
+          "placeholder": "One-line caption: what is shown, the marks and the conditions",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "title-classic": {
+      "description": "A title page with a subtitle: title, a large subtitle and the presenter at the bottom left under the rule.",
+      "usage": {
+        "when": "A title page that needs a subtitle line.",
+        "how": "title in at most two lines; subtitle one phrase; author the presenter, with the affiliation or date on a second line."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            104,
+            800,
+            200
+          ],
+          "style": "cover-title",
+          "placeholder": "Talk title",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            318,
+            800,
+            100
+          ],
+          "style": "cover-subtitle",
+          "placeholder": "Subtitle",
+          "hook": "chem-subscripts"
+        },
+        "author": {
+          "role": "body",
+          "box": [
+            48,
+            450,
+            560,
+            60
+          ],
+          "style": "cover-author",
+          "placeholder": "Presenter\nAffiliation or date"
+        }
+      }
+    },
+    "section-header": {
+      "description": "A section name with a subtitle, on the light background.",
+      "usage": {
+        "when": "A section break that needs a subtitle; use separator otherwise.",
+        "how": "title the section name; subtitle one phrase."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            104,
+            800,
+            200
+          ],
+          "style": "cover-title",
+          "placeholder": "Section name",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            318,
+            800,
+            100
+          ],
+          "style": "cover-subtitle",
+          "placeholder": "Subtitle",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "agenda": {
+      "description": "A large title on the left and a list on the right.",
+      "usage": {
+        "when": "An outline of the talk.",
+        "how": "title one or two words; body the items, one per line."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-272.svg",
+          "box": [
+            48,
+            112,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-272-dark.svg",
+          "box": [
+            48,
+            112,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            48,
+            336,
+            60
+          ],
+          "style": "agenda-title",
+          "placeholder": "Outline",
+          "hook": "chem-subscripts"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            432,
+            56,
+            480,
+            422
+          ],
+          "placeholder": "One item per line",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "title-only": {
+      "description": "Title and subtitle only; the rest of the page is free.",
+      "usage": {
+        "when": "A page whose content does not fit any other layout.",
+        "how": "title and subtitle as on every content page."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "set-id": {
+          "role": "label",
+          "box": [
+            612,
+            12,
+            300,
+            14
+          ],
+          "style": "set-id",
+          "lines": 1,
+          "placeholder": "ID 0000abcd"
+        }
+      }
+    },
+    "title-and-content": {
+      "description": "Title, subtitle and one full-width text area.",
+      "usage": {
+        "when": "Text-only content.",
+        "how": "body holds the text."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            864,
+            360
+          ],
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "two-content": {
+      "description": "Two equal columns under the title.",
+      "usage": {
+        "when": "Two parallel blocks of text.",
+        "how": "body:a and body:b hold one text block each."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body:a": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            416.0,
+            360
+          ],
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "body:b": {
+          "role": "body",
+          "box": [
+            496.0,
+            118,
+            416.0,
+            360
+          ],
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "three-content": {
+      "description": "Three equal columns under the title.",
+      "usage": {
+        "when": "Three parallel blocks of text.",
+        "how": "body:a to body:c hold 18 pt text."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body:a": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            272.0,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "body:b": {
+          "role": "body",
+          "box": [
+            344.0,
+            118,
+            272.0,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "body:c": {
+          "role": "body",
+          "box": [
+            640.0,
+            118,
+            272.0,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "three-images-captions": {
+      "description": "Three pictures with a text block under each.",
+      "usage": {
+        "when": "Three items, each a picture and its explanation.",
+        "how": "fig:a to fig:c take pictures; body:a to body:c explain them in 18 pt."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            100,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            864,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            118,
+            272.0,
+            160
+          ],
+          "placeholder": "Picture a"
+        },
+        "body:a": {
+          "role": "body",
+          "box": [
+            48,
+            294,
+            272.0,
+            184
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:b": {
+          "role": "figure",
+          "box": [
+            344.0,
+            118,
+            272.0,
+            160
+          ],
+          "placeholder": "Picture b"
+        },
+        "body:b": {
+          "role": "body",
+          "box": [
+            344.0,
+            294,
+            272.0,
+            184
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:c": {
+          "role": "figure",
+          "box": [
+            640.0,
+            118,
+            272.0,
+            160
+          ],
+          "placeholder": "Picture c"
+        },
+        "body:c": {
+          "role": "body",
+          "box": [
+            640.0,
+            294,
+            272.0,
+            184
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "large-text": {
+      "description": "One large statement filling the page.",
+      "usage": {
+        "when": "A single message to stay on screen.",
+        "how": "title holds the statement."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-272.svg",
+          "box": [
+            48,
+            96,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-272-dark.svg",
+          "box": [
+            48,
+            96,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            120,
+            780,
+            358
+          ],
+          "style": "large-text",
+          "placeholder": "One statement",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "title-text-content": {
+      "description": "Title, subtitle and text in the left column; a full-height figure on the right.",
+      "usage": {
+        "when": "One tall figure with text beside it.",
+        "how": "body holds 18 pt text; fig:a the figure."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-400.svg",
+          "box": [
+            48,
+            100,
+            400,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-400-dark.svg",
+          "box": [
+            48,
+            100,
+            400,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            400,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            400,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            400,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            480,
+            32,
+            432,
+            446
+          ],
+          "placeholder": "Figure"
+        }
+      }
+    },
+    "content-four-images": {
+      "description": "A text column on the left and a 2 x 2 grid of pictures.",
+      "usage": {
+        "when": "Four pictures that share one explanation.",
+        "how": "body holds 18 pt text; fig:a to fig:d fill the grid row by row."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-272.svg",
+          "box": [
+            48,
+            100,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-272-dark.svg",
+          "box": [
+            48,
+            100,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            272,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            272,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            272,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            344.0,
+            32.0,
+            276.0,
+            215.0
+          ],
+          "placeholder": "Picture a"
+        },
+        "fig:b": {
+          "role": "figure",
+          "box": [
+            636.0,
+            32.0,
+            276.0,
+            215.0
+          ],
+          "placeholder": "Picture b"
+        },
+        "fig:c": {
+          "role": "figure",
+          "box": [
+            344.0,
+            263.0,
+            276.0,
+            215.0
+          ],
+          "placeholder": "Picture c"
+        },
+        "fig:d": {
+          "role": "figure",
+          "box": [
+            636.0,
+            263.0,
+            276.0,
+            215.0
+          ],
+          "placeholder": "Picture d"
+        }
+      }
+    },
+    "content-nine-images": {
+      "description": "A text column on the left and a 3 x 3 grid of pictures.",
+      "usage": {
+        "when": "Nine small pictures that share one explanation.",
+        "how": "body holds 18 pt text; fig:a to fig:i fill the grid row by row."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-272.svg",
+          "box": [
+            48,
+            100,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-272-dark.svg",
+          "box": [
+            48,
+            100,
+            272,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            272,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide",
+          "hook": "chem-subscripts"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            67,
+            272,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "One sentence on what the page shows",
+          "hook": "chem-subscripts"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            118,
+            272,
+            360
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            344.0,
+            32.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture a"
+        },
+        "fig:b": {
+          "role": "figure",
+          "box": [
+            536.7,
+            32.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture b"
+        },
+        "fig:c": {
+          "role": "figure",
+          "box": [
+            729.3,
+            32.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture c"
+        },
+        "fig:d": {
+          "role": "figure",
+          "box": [
+            344.0,
+            184.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture d"
+        },
+        "fig:e": {
+          "role": "figure",
+          "box": [
+            536.7,
+            184.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture e"
+        },
+        "fig:f": {
+          "role": "figure",
+          "box": [
+            729.3,
+            184.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture f"
+        },
+        "fig:g": {
+          "role": "figure",
+          "box": [
+            344.0,
+            336.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture g"
+        },
+        "fig:h": {
+          "role": "figure",
+          "box": [
+            536.7,
+            336.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture h"
+        },
+        "fig:i": {
+          "role": "figure",
+          "box": [
+            729.3,
+            336.0,
+            182.7,
+            142.0
+          ],
+          "placeholder": "Picture i"
+        }
+      }
+    },
+    "text-and-content": {
+      "description": "A full-height text column and a full-height figure, with a small source line under the figure.",
+      "usage": {
+        "when": "Text first, figure second.",
+        "how": "body holds 18 pt text; fig:a the figure; source a small line under the figure."
+      },
+      "background": "plain",
+      "slots": {
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            48,
+            416,
+            430
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            496.0,
+            48,
+            416.0,
+            412
+          ],
+          "placeholder": "Figure"
+        },
+        "source": {
+          "role": "caption",
+          "box": [
+            496.0,
+            466,
+            416.0,
+            12
+          ],
+          "style": "footnote",
+          "lines": 1,
+          "placeholder": "Source",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "content-and-text": {
+      "description": "A full-height figure and a full-height text column, with a small source line under the figure.",
+      "usage": {
+        "when": "Figure first, text second.",
+        "how": "body holds 18 pt text; fig:a the figure; source a small line under the figure."
+      },
+      "background": "plain",
+      "slots": {
+        "body": {
+          "role": "body",
+          "box": [
+            496.0,
+            48,
+            416.0,
+            430
+          ],
+          "style": "body-18",
+          "placeholder": "Text",
+          "hook": "chem-subscripts"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            48,
+            416.0,
+            412
+          ],
+          "placeholder": "Figure"
+        },
+        "source": {
+          "role": "caption",
+          "box": [
+            48,
+            466,
+            416.0,
+            12
+          ],
+          "style": "footnote",
+          "lines": 1,
+          "placeholder": "Source",
+          "hook": "chem-subscripts"
+        }
+      }
+    },
+    "end": {
+      "description": "A quiet closing page: the ruled footer of the title page and nothing else.",
+      "usage": {
+        "when": "A closing page with no text.",
+        "how": "No slots; the rule is drawn by the layout."
+      },
+      "background": "plain",
+      "decorations": [
+        {
+          "image": "images/rule-864.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "plain",
+            "smoke",
+            "khaki"
+          ]
+        },
+        {
+          "image": "images/rule-864-dark.svg",
+          "box": [
+            48,
+            432,
+            864,
+            3
+          ],
+          "backgrounds": [
+            "black"
+          ]
+        }
+      ],
+      "slots": {}
+    },
+    "blank": {
+      "description": "An empty page.",
+      "usage": {
+        "when": "Content placed by hand outside the template system.",
+        "how": "No slots."
+      },
+      "background": "plain",
+      "slots": {}
+    }
+  },
+  "rules": {
+    "maxChars": {
+      "title": 75,
+      "subtitle": 65,
+      "caption": 125
+    },
+    "guidance": [
+      "A title names the page's subject; the subtitle states its finding.",
+      "A caption is one line.",
+      "The subtitle is one sentence-case sentence with no full stop.",
+      "Figures are drawn at exactly their box size; never crop or rescale a picture to fit."
+    ]
+  }
+}

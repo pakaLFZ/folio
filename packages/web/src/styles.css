@@ -1,0 +1,584 @@
+@import "tailwindcss";
+
+/*
+ * folio's editor chrome, in the cavitas material: an achromatic instrument laid
+ * over a scene. Here the scene is the slide. Hairlines are translucent ink,
+ * corners come from the five radius tokens and nothing but a dot is round,
+ * numbers are mono with tabular figures, and the only chromatic colour in the
+ * chrome is danger, spent on a warning about the slide.
+ * Slide content never reads these tokens; it is styled by the deck's pack.
+ */
+@theme {
+  --color-canvas: #fafafa;
+  --color-surface: #ffffff;
+  --color-raised: #ffffff;
+  --color-ash: #f0f0f0;
+  --color-sunken: #f0f0f0;
+  --color-column: rgb(0 0 0 / 0.035);
+  --color-paper: #ffffff;
+  --color-whisper: rgb(0 0 0 / 0.04);
+  --color-line: rgb(0 0 0 / 0.12);
+  --color-line-soft: rgb(0 0 0 / 0.07);
+  --color-line-strong: rgb(0 0 0 / 0.24);
+  --color-ink: #000000;
+  --color-on-ink: #ffffff;
+  --color-ink-muted: #4d4d4d;
+  --color-ink-faint: #616161;
+  --color-ink-strong-hover: #282828;
+  --color-focus: #000000;
+  --color-danger: #a12b26;
+  --color-caution: #8a5a00;
+  --color-info: #2a5d8f;
+
+  --font-sans: "OpenAI Sans", "SF Pro Text", "Segoe UI Variable Text", "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-*: initial;
+  --radius-chip: 4px;
+  --radius-control: 6px;
+  --radius-card: 6px;
+  --radius-menu: 10px;
+  --radius-pane: 12px;
+}
+
+:root {
+  --glass-fill: rgb(255 255 255 / 0.74);
+  --glass-edge: rgb(0 0 0 / 0.09);
+  --glass-blur: 28px;
+  --glass-lift: rgb(0 0 0 / 0.02) 0 4px 6px 0, rgb(0 0 0 / 0.05) 0 0 2px 0, rgb(0 0 0 / 0.06) 0 16px 48px -12px;
+  --panel-fill: rgb(255 255 255 / 0.72);
+  --panel-blur: 64px;
+  --control-shadow: rgb(0 0 0 / 0.14) 0 1px 2px;
+  --sheet-lift: rgb(0 0 0 / 0.04) 0 1px 2px, rgb(0 0 0 / 0.06) 0 12px 32px -16px;
+  color-scheme: light;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur: 200ms;
+  --panel-inset: 12px;
+  --panel-header-pad: 8px;
+  --glass-edge-w: 1px;
+  --corner-btn: 36px;
+  --corner-hit: calc(var(--corner-btn) - 4px);
+  --corner-icon: 16px;
+  --corner-icon-ink: calc(var(--corner-icon) / 12);
+  --corner-glyph-x: calc(var(--glass-edge-w) + var(--panel-header-pad) + (var(--corner-btn) - var(--corner-icon)) / 2 + var(--corner-icon-ink));
+  --corner-gap: 8px;
+  --corner-x: calc(var(--panel-inset) + var(--glass-edge-w) + var(--panel-header-pad));
+  --gutter: var(--panel-inset);
+  --tabbar-margin: 8px;
+  --panel-pad: 12px;
+  --thumb-pad: calc(var(--panel-pad) / 2);
+  --section-pad: 8px;
+  --thumb-hairline: 1px;
+  --thumb-inset: round(calc(var(--corner-glyph-x) + var(--thumb-hairline)), 1px);
+  --scrollbar-w: 10px;
+  --panel-w: 328px;
+  --rail-w: 196px;
+  --z-scene: 0;
+  --z-overlay: 10;
+  --z-panel: 20;
+  --z-popover: 30;
+}
+
+:root[data-theme="dark"] {
+  --color-canvas: #181818;
+  --color-surface: #232325;
+  --color-raised: #2e2e31;
+  --color-ash: #333336;
+  --color-sunken: #111113;
+  --color-column: rgb(255 255 255 / 0.04);
+  --color-whisper: rgb(255 255 255 / 0.06);
+  --color-line: rgb(255 255 255 / 0.14);
+  --color-line-soft: rgb(255 255 255 / 0.08);
+  --color-line-strong: rgb(255 255 255 / 0.28);
+  --color-ink: #f2f2f2;
+  --color-on-ink: #111111;
+  --color-ink-muted: #bdbdbd;
+  --color-ink-faint: #a1a1a1;
+  --color-ink-strong-hover: #d4d4d4;
+  --color-focus: #f2f2f2;
+  --color-danger: #ff8a80;
+  --color-caution: #e6b14e;
+  --color-info: #8ab8e6;
+  --glass-fill: rgb(36 36 38 / 0.82);
+  --glass-edge: rgb(255 255 255 / 0.1);
+  --glass-lift: rgb(0 0 0 / 0.2) 0 4px 6px 0, rgb(0 0 0 / 0.3) 0 0 2px 0, rgb(0 0 0 / 0.4) 0 16px 48px -12px;
+  --panel-fill: rgb(36 36 38 / 0.78);
+  --control-shadow: rgb(0 0 0 / 0.5) 0 1px 2px;
+  --sheet-lift: rgb(0 0 0 / 0.3) 0 1px 2px, rgb(0 0 0 / 0.4) 0 12px 32px -16px;
+  color-scheme: dark;
+}
+
+@media (width < 40rem) {
+  :root {
+    --panel-inset: 0px;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-width: 200px;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "calt" on, "liga" on;
+    font-size: 13px;
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    -webkit-font-smoothing: antialiased;
+    caret-color: var(--color-ink);
+    overflow: hidden;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-on-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-chip);
+  }
+
+  ::-webkit-scrollbar {
+    width: var(--scrollbar-w);
+    height: var(--scrollbar-w);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-ink) 14%, transparent);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in srgb, var(--color-ink) 26%, transparent);
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  /* The one material for floating chrome. */
+  .glass {
+    background: var(--panel-fill);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-lift);
+    -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(220%);
+    backdrop-filter: blur(var(--panel-blur)) saturate(220%);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: var(--color-surface);
+    }
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
+
+  .scroll-stable {
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+
+  /*
+   * A pane and its toggles, as in cavitas: the pane stays mounted and moves
+   * off-screen when shut; each toggle is one fixed element over the pane's
+   * header, at the corner the pane's inset, hairline and header padding add up
+   * to, so opening or closing moves and resizes nothing but the pane.
+   */
+  .pane {
+    position: fixed;
+    z-index: var(--z-panel);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: var(--radius-pane);
+  }
+
+  .pane-header {
+    flex: none;
+    height: calc(var(--corner-btn) + var(--panel-header-pad));
+  }
+
+  .corner-row {
+    position: fixed;
+    top: var(--corner-x);
+    z-index: var(--z-popover);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border-radius: var(--radius-control);
+    background: var(--color-sunken);
+  }
+
+  .corner-left {
+    left: var(--corner-x);
+    background: transparent;
+  }
+
+  .corner-right {
+    right: calc(var(--corner-x) + var(--corner-btn) + var(--gutter));
+  }
+
+  /*
+   * The panel toggle, standalone: it sits on the panel's own glass, with no
+   * well or selected fill around it, the mirror of the rail toggle on the
+   * left. It keeps the well's row position (top, height) but its own inset
+   * from the pane's right edge, --corner-x, same as the rail toggle's from
+   * the left.
+   */
+  .corner-right-toggle {
+    right: var(--corner-x);
+    background: transparent;
+  }
+
+  /*
+   * The whole hit box is inset equally from the pane's top and side.
+   * Its hover fill uses the same rounded corners as the pane.
+   */
+  .corner-fill {
+    border-radius: var(--radius-pane);
+  }
+
+  @media (width < 900px) {
+    .corner-right[data-open="true"],
+    .corner-right-toggle[data-open="true"] {
+      top: calc(55vh + var(--glass-edge-w) + var(--panel-header-pad));
+    }
+  }
+
+  .mode-pill {
+    /* The rail toggle, the Home button and the Copy button (each --corner-hit wide), plus .corner-row's own 2px gaps between them and 2px padding on each side. */
+    --rail-toggles-w: calc(var(--corner-hit) * 3 + 8px);
+    position: fixed;
+    top: var(--corner-x);
+    left: calc(var(--corner-x) + var(--rail-toggles-w) + var(--gutter));
+    height: var(--corner-btn);
+    align-items: center;
+    z-index: var(--z-panel);
+  }
+
+  /*
+   * The notice: top-centre of the scene (between the open panes), one gutter
+   * below the top row, so it never covers the mode switch, the zoom chip or
+   * a pane header. It slides in from above; no motion when reduced.
+   */
+  .notice {
+    position: fixed;
+    top: calc(var(--corner-x) + var(--corner-btn) + var(--gutter));
+    left: var(--scene-left, 0px);
+    right: var(--scene-right, 0px);
+    z-index: var(--z-popover);
+    display: flex;
+    justify-content: center;
+    padding-inline: 16px;
+    pointer-events: none;
+  }
+
+  .notice-card {
+    animation: notice-in 200ms var(--ease);
+  }
+
+  @keyframes notice-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notice-card {
+      animation: none;
+    }
+  }
+
+  .page {
+    transition: opacity 120ms var(--ease);
+  }
+
+  .page-away {
+    position: fixed;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 120ms var(--ease), visibility 0s linear 120ms;
+  }
+
+  .page-in {
+    animation: page-in 120ms var(--ease);
+  }
+
+  @keyframes page-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .page,
+    .page-away {
+      transition: none;
+    }
+
+    .page-in {
+      animation: none;
+    }
+  }
+
+  .mode-pill[data-rail="open"] {
+    left: calc(var(--panel-inset) + var(--rail-w) + var(--gutter));
+  }
+
+  /*
+   * A pane's grip: an 8 px band straddling its inner edge, clear of the
+   * rounded corners. At rest it draws nothing; under the pointer or held it
+   * draws the edge as a 2 px line of strong ink, and focused, of ink.
+   */
+  .pane-resizer {
+    --grip: 8px;
+    position: fixed;
+    top: calc(var(--panel-inset) + var(--radius-pane));
+    bottom: calc(var(--panel-inset) + var(--radius-pane));
+    width: var(--grip);
+    z-index: calc(var(--z-panel) + 1);
+    cursor: col-resize;
+    touch-action: none;
+    outline: none;
+  }
+
+  .pane-resizer[data-side="rail"] {
+    left: calc(var(--panel-inset) + var(--rail-w) - var(--grip) / 2);
+  }
+
+  .pane-resizer[data-side="panel"] {
+    right: calc(var(--panel-inset) + var(--panel-w) - var(--grip) / 2);
+  }
+
+  .pane-resizer::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    left: calc(var(--grip) / 2 - 1px);
+    width: 2px;
+    background: transparent;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+
+  .pane-resizer:hover::before,
+  .pane-resizer[data-dragging]::before {
+    background: var(--color-line-strong);
+  }
+
+  .pane-resizer:focus-visible::before {
+    background: var(--color-ink);
+  }
+
+  :root[data-resizing],
+  :root[data-resizing] * {
+    cursor: col-resize !important;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .rail-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+    padding-block-start: var(--panel-header-pad);
+    padding-block-end: calc(var(--panel-pad) - var(--thumb-pad));
+  }
+
+  .rail-thumb {
+    transition:
+      background-color var(--dur-fast) var(--ease),
+      opacity var(--dur-fast) var(--ease),
+      transform 180ms var(--ease);
+  }
+
+  .rail-thumb[data-settling] {
+    transition: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail-thumb {
+      transition: background-color var(--dur-fast) var(--ease);
+    }
+  }
+
+  .panel-body {
+    margin-top: calc(var(--panel-header-pad) - var(--section-pad));
+  }
+
+  .section-title {
+    font-size: 11px;
+    color: var(--color-ink-faint);
+    line-height: 1.4;
+  }
+}
+
+/* Slide content: geometry and type come from the pack, never from the chrome. */
+@layer components {
+  .folio-slide {
+    --color-danger: #a12b26;
+    color-scheme: light;
+    color: #000000;
+    position: relative;
+    overflow: hidden;
+    transform-origin: 0 0;
+    font-kerning: normal;
+    font-feature-settings: normal;
+    letter-spacing: 0;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  .folio-slot {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  /* Belt for SlideView's drag guard (useNoNativeDrag): disarms the first
+     paint, before its effect has run. */
+  .folio-slide img,
+  .folio-slide a {
+    -webkit-user-drag: none;
+  }
+
+  .folio-text {
+    outline: none;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+
+  .folio-text [data-paragraph] {
+    position: relative;
+    min-height: 1em;
+  }
+
+  .folio-text [data-list] {
+    padding-left: 1.6em;
+  }
+
+  .folio-text [data-list][data-level="2"] { padding-left: 3em; }
+  .folio-text [data-list][data-level="3"] { padding-left: 4.4em; }
+
+  .folio-text [data-list]::before {
+    content: attr(data-marker);
+    position: absolute;
+    left: 0;
+    width: 1.35em;
+    text-align: right;
+    color: var(--list-marker-color);
+    font-size: var(--list-marker-size);
+  }
+
+  .folio-text [data-list][data-level="2"]::before { left: 1.4em; }
+  .folio-text [data-list][data-level="3"]::before { left: 2.8em; }
+
+  .folio-text[data-placeholder] {
+    position: relative;
+  }
+
+  .folio-text[data-placeholder][data-empty]::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    inset: 0 0 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .folio-text sub,
+  .folio-text sup {
+    font-size: 0.65em;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+
+  .folio-text sub {
+    top: 0.28em;
+  }
+
+  .folio-text sup {
+    top: -0.42em;
+  }
+
+  .folio-code .hljs-keyword,
+  .folio-code .hljs-literal,
+  .folio-code .hljs-selector-tag,
+  .folio-code .hljs-doctag {
+    color: var(--syntax-keyword);
+  }
+
+  .folio-code .hljs-string,
+  .folio-code .hljs-regexp,
+  .folio-code .hljs-symbol,
+  .folio-code .hljs-char,
+  .folio-code .hljs-addition {
+    color: var(--syntax-string);
+  }
+
+  .folio-code .hljs-comment,
+  .folio-code .hljs-quote,
+  .folio-code .hljs-deletion {
+    color: var(--syntax-comment);
+    font-style: italic;
+  }
+
+  .folio-code .hljs-number {
+    color: var(--syntax-number);
+  }
+
+  .folio-code .hljs-title,
+  .folio-code .hljs-section {
+    color: var(--syntax-function);
+  }
+
+  .folio-code .hljs-type,
+  .folio-code .hljs-built_in,
+  .folio-code .hljs-title.class_,
+  .folio-code .hljs-attr,
+  .folio-code .hljs-attribute {
+    color: var(--syntax-type);
+  }
+
+  .folio-code .hljs-meta,
+  .folio-code .hljs-meta .hljs-keyword {
+    color: var(--syntax-meta);
+  }
+
+  .folio-code-gutter {
+    color: var(--syntax-comment);
+    text-align: right;
+    user-select: none;
+  }
+}

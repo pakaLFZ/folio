@@ -1,0 +1,9 @@
+{
+  "id": "cf0014b917bb00fa",
+  "title": "Example deck",
+  "template": "lectern@1",
+  "order": [
+    "s001",
+    "s002"
+  ]
+}

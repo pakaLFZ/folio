@@ -1,0 +1,537 @@
+{
+  "name": "plain",
+  "version": 1,
+  "description": "folio's built-in neutral pack: 16:9, 960 x 540 pt, black on white, Liberation Sans. For decks made without a template.",
+  "usage": {
+    "when": "Any deck that does not need a house style; the default of folio init-deck without --template.",
+    "how": "Pick a layout per page; for a page no layout fits, use canvas and add slots by override."
+  },
+  "canvas": {
+    "w": 960,
+    "h": 540,
+    "unit": "pt"
+  },
+  "fontFallback": "Liberation Sans, Arial, Helvetica, sans-serif",
+  "fonts": [
+    {
+      "family": "Liberation Sans",
+      "file": "fonts/LiberationSans-Regular.ttf",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "Liberation Sans",
+      "file": "fonts/LiberationSans-Bold.ttf",
+      "weight": 700,
+      "style": "normal"
+    },
+    {
+      "family": "Liberation Sans",
+      "file": "fonts/LiberationSans-Italic.ttf",
+      "weight": 400,
+      "style": "italic"
+    },
+    {
+      "family": "Liberation Sans",
+      "file": "fonts/LiberationSans-BoldItalic.ttf",
+      "weight": 700,
+      "style": "italic"
+    },
+    {
+      "family": "Liberation Mono",
+      "file": "fonts/LiberationMono-Regular.ttf",
+      "weight": 400,
+      "style": "normal"
+    },
+    {
+      "family": "Liberation Mono",
+      "file": "fonts/LiberationMono-Bold.ttf",
+      "weight": 700,
+      "style": "normal"
+    }
+  ],
+  "roles": {
+    "title": {
+      "font": "Liberation Sans",
+      "size": 30,
+      "weight": 700,
+      "lineHeight": 1.15,
+      "wrap": false
+    },
+    "subtitle": {
+      "font": "Liberation Sans",
+      "size": 22,
+      "lineHeight": 1.2,
+      "color": "#555555"
+    },
+    "body": {
+      "font": "Liberation Sans",
+      "size": 20,
+      "lineHeight": 1.35
+    },
+    "label": {
+      "font": "Liberation Sans",
+      "size": 16,
+      "weight": 700,
+      "lineHeight": 1.25,
+      "wrap": false
+    },
+    "caption": {
+      "font": "Liberation Sans",
+      "size": 13,
+      "lineHeight": 1.25,
+      "color": "#555555"
+    },
+    "note": {
+      "font": "Liberation Sans",
+      "size": 13,
+      "lineHeight": 1.3
+    },
+    "cover-title": {
+      "font": "Liberation Sans",
+      "size": 52,
+      "weight": 700,
+      "lineHeight": 1.1,
+      "anchor": "bottom"
+    },
+    "section-title": {
+      "font": "Liberation Sans",
+      "size": 48,
+      "weight": 700,
+      "lineHeight": 1.1,
+      "anchor": "bottom"
+    },
+    "author": {
+      "font": "Liberation Sans",
+      "size": 18,
+      "lineHeight": 1.3,
+      "anchor": "bottom"
+    }
+  },
+  "backgrounds": {
+    "plain": {
+      "fill": "#FFFFFF",
+      "ink": "#111111"
+    },
+    "dark": {
+      "fill": "#16181D",
+      "ink": "#FFFFFF"
+    }
+  },
+  "tables": {
+    "default": {
+      "description": "A bold header row over a rule, a thin rule between body rows, no fills and no vertical rules.",
+      "size": 14,
+      "lineHeight": 1.2,
+      "headerWeight": 700,
+      "cellPad": [
+        4,
+        8,
+        4,
+        8
+      ],
+      "rule": {
+        "color": "#BBBBBB",
+        "width": 0.75,
+        "outer": false,
+        "rows": true,
+        "columns": false
+      }
+    }
+  },
+  "colors": {
+    "grey": "#888888",
+    "light": "#F2F2F2",
+    "blue": "#1F5AA6",
+    "red": "#C0392B",
+    "green": "#2E7D32",
+    "tint": "#EAF0F8"
+  },
+  "shapes": {
+    "default": {
+      "description": "A plain outline in the background's ink, 1.5 pt, no fill.",
+      "fill": null,
+      "stroke": "ink",
+      "strokeWidth": 1.5
+    },
+    "accent": {
+      "description": "A blue 2 pt outline, no fill: to point at or ring something.",
+      "fill": null,
+      "stroke": "blue",
+      "strokeWidth": 2
+    }
+  },
+  "blocks": {
+    "card": {
+      "description": "A white card with a thin border; text flows over two columns and the card grows with it.",
+      "kind": "text",
+      "fill": "#FFFFFF",
+      "border": {
+        "color": "#D0D0D0",
+        "width": 0.75
+      },
+      "radius": 4,
+      "padding": 12,
+      "columns": 2,
+      "columnGap": 18,
+      "grow": true,
+      "text": {
+        "size": 16,
+        "lineHeight": 1.3
+      }
+    },
+    "callout": {
+      "description": "A tinted box with a coloured bar on its left: a key point, a definition or a caveat.",
+      "kind": "text",
+      "fill": "tint",
+      "border": {
+        "color": "blue",
+        "width": 4,
+        "side": "left"
+      },
+      "padding": 12,
+      "columns": 1,
+      "grow": true,
+      "text": {
+        "size": 18,
+        "lineHeight": 1.3
+      }
+    },
+    "code": {
+      "description": "Source code in a monospace font, highlighted; python unless the slide names another language.",
+      "kind": "code",
+      "fill": "light",
+      "radius": 4,
+      "padding": 12,
+      "grow": true,
+      "text": {
+        "font": "Liberation Mono",
+        "size": 14,
+        "lineHeight": 1.35
+      },
+      "language": "python",
+      "lineNumbers": false
+    }
+  },
+  "layouts": {
+    "canvas": {
+      "description": "An empty page for freeform content: every element is a slot the slide adds itself.",
+      "usage": {
+        "when": "A page no other layout fits: a diagram with callouts, a picture with labels, a free arrangement of text, figures and tables.",
+        "how": "The layout has no slots. Add each element as a slot override of this slide, given in full, then fill it like any slot: folio override <deck>/<slide> 'slots.headline={\"role\":\"title\",\"box\":[48,32,864,44]}' 'slots.fig:a={\"role\":\"figure\",\"box\":[48,100,560,400]}' 'slots.label:a={\"role\":\"label\",\"box\":[640,120,272,40]}', then set the props headline, fig:a and label:a. Boxes are [x, y, w, h] in pt on a 960 x 540 page; keep a 48 pt margin. Figures are named fig:<x>, tables table:<x> with \"tableStyle\": \"default\"."
+      },
+      "background": "plain",
+      "slots": {}
+    },
+    "title": {
+      "description": "Cover page: a large title, a subtitle and the author.",
+      "usage": {
+        "when": "The first page of a deck.",
+        "how": "title holds the deck's name in at most two lines; subtitle one qualifying phrase; author the presenter, with a date or affiliation on a second line."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            150,
+            864,
+            140
+          ],
+          "style": "cover-title",
+          "lines": 2,
+          "placeholder": "Name of the talk"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            300,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "One phrase on what it is about"
+        },
+        "author": {
+          "role": "body",
+          "box": [
+            48,
+            410,
+            864,
+            60
+          ],
+          "style": "author",
+          "lines": 2,
+          "placeholder": "Presenter, and the date on a second line"
+        }
+      }
+    },
+    "section": {
+      "description": "A section break: one large heading on the dark background.",
+      "usage": {
+        "when": "The start of a new part of the deck.",
+        "how": "title names the part in at most two lines; subtitle may add one line on what it covers, or stay empty."
+      },
+      "background": "dark",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            180,
+            864,
+            120
+          ],
+          "style": "section-title",
+          "lines": 2,
+          "placeholder": "Name of the section"
+        },
+        "subtitle": {
+          "role": "subtitle",
+          "box": [
+            48,
+            310,
+            864,
+            34
+          ],
+          "lines": 1,
+          "placeholder": "What this part covers"
+        }
+      }
+    },
+    "title-and-content": {
+      "description": "A title over one full-width text area.",
+      "usage": {
+        "when": "A page of text: points, a short argument, a list.",
+        "how": "title states the page's claim in one line; body holds the text, one point per line."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            44
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            48,
+            100,
+            864,
+            400
+          ],
+          "placeholder": "One point per line"
+        }
+      }
+    },
+    "two-columns": {
+      "description": "A title over two text columns side by side.",
+      "usage": {
+        "when": "A comparison or two parallel lists: before and after, option A and option B.",
+        "how": "title states the comparison; label:a and label:b head the columns in one line each; body:a and body:b hold the text."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            44
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide"
+        },
+        "label:a": {
+          "role": "label",
+          "box": [
+            48,
+            100,
+            420,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "Left heading"
+        },
+        "body:a": {
+          "role": "body",
+          "box": [
+            48,
+            132,
+            420,
+            368
+          ],
+          "placeholder": "Left column"
+        },
+        "label:b": {
+          "role": "label",
+          "box": [
+            492,
+            100,
+            420,
+            24
+          ],
+          "lines": 1,
+          "placeholder": "Right heading"
+        },
+        "body:b": {
+          "role": "body",
+          "box": [
+            492,
+            132,
+            420,
+            368
+          ],
+          "placeholder": "Right column"
+        }
+      }
+    },
+    "figure": {
+      "description": "A title over one large figure and a caption.",
+      "usage": {
+        "when": "One chart, plot or picture is the message.",
+        "how": "title states what the figure shows; fig:a is a file path relative to the deck (SVG or PNG, drawn at exactly 864 x 360 pt) or a hook call; caption is one line under it."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            44
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            96,
+            864,
+            360
+          ],
+          "placeholder": "The figure"
+        },
+        "caption": {
+          "role": "caption",
+          "box": [
+            48,
+            466,
+            864,
+            30
+          ],
+          "lines": 1,
+          "placeholder": "What the figure shows, and its source"
+        }
+      }
+    },
+    "figure-and-text": {
+      "description": "A figure on the left and text on the right.",
+      "usage": {
+        "when": "A figure that needs a few lines of explanation beside it.",
+        "how": "title states the finding; fig:a is drawn at exactly 520 x 400 pt; body holds three to six short lines on what to read in the figure."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            44
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide"
+        },
+        "fig:a": {
+          "role": "figure",
+          "box": [
+            48,
+            100,
+            520,
+            400
+          ],
+          "placeholder": "The figure"
+        },
+        "body": {
+          "role": "body",
+          "box": [
+            592,
+            100,
+            320,
+            400
+          ],
+          "placeholder": "What to read in the figure"
+        }
+      }
+    },
+    "table": {
+      "description": "A title over one table and a note.",
+      "usage": {
+        "when": "Numbers that are compared row by row.",
+        "how": "title states what the table shows; table:a is {\"columns\": [...], \"rows\": [[...], ...]} with one string per cell, at most twelve rows; note holds one or two lines on the source or the units."
+      },
+      "background": "plain",
+      "slots": {
+        "title": {
+          "role": "title",
+          "box": [
+            48,
+            32,
+            864,
+            44
+          ],
+          "lines": 1,
+          "placeholder": "Title of the slide"
+        },
+        "table:a": {
+          "role": "table",
+          "box": [
+            48,
+            100,
+            864,
+            340
+          ],
+          "tableStyle": "default",
+          "placeholder": "The table"
+        },
+        "note": {
+          "role": "note",
+          "box": [
+            48,
+            452,
+            864,
+            48
+          ],
+          "below": {
+            "slot": "table:a",
+            "gap": 12
+          },
+          "placeholder": "Source and units"
+        }
+      }
+    }
+  },
+  "rules": {
+    "maxChars": {
+      "title": 80
+    },
+    "guidance": [
+      "One message per page: the title states it as a claim, not a topic.",
+      "Figures are drawn at exactly their box size; make them at that size."
+    ]
+  }
+}

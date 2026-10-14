@@ -1,0 +1,12 @@
+{
+  "name": "chem-subscripts",
+  "version": 1,
+  "output": "text",
+  "description": "Writes the digits of chemical formulas as subscripts (H2O becomes H_{2}O); other numbers stay as written.",
+  "runtime": "python",
+  "command": ["transform.py"],
+  "entry": "transform:transform",
+  "mode": "spawn",
+  "timeout": 10,
+  "inputs": { "type": "string" }
+}

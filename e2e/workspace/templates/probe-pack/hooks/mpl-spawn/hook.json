@@ -1,0 +1,43 @@
+{
+  "name": "mpl-spawn",
+  "version": 1,
+  "runtime": "python",
+  "command": [
+    "draw.py"
+  ],
+  "entry": "draw:draw",
+  "outputs": "png",
+  "dpi": 72,
+  "timeout": 30,
+  "inputs": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "label"
+    ],
+    "properties": {
+      "label": {
+        "type": "string"
+      },
+      "sleep": {
+        "type": "number"
+      },
+      "fail": {
+        "type": "boolean"
+      },
+      "warn": {
+        "type": "string"
+      },
+      "crash": {
+        "type": "boolean"
+      },
+      "wrong_size": {
+        "type": "boolean"
+      }
+    }
+  },
+  "mode": "spawn",
+  "requires": [
+    "matplotlib>=3.8"
+  ]
+}

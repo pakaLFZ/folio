@@ -1,0 +1,130 @@
+{
+  "name": "line-plot",
+  "version": 1,
+  "description": "Line plot of up to six series in the pack's plot style: one vermilion accent series, neutral greys, IBM Plex Sans, shared legend at the bottom.",
+  "runtime": "python",
+  "command": [
+    "draw.py"
+  ],
+  "entry": "draw:draw",
+  "mode": "spawn",
+  "outputs": "png",
+  "dpi": 200,
+  "timeout": 60,
+  "requires": [
+    "matplotlib>=3.8"
+  ],
+  "example": {
+    "title": "Response against load",
+    "x_label": "Load / kN",
+    "y_label": "$\\Delta L$ / mm",
+    "series": [
+      {
+        "name": "Reference",
+        "x": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "y": [
+          0,
+          0.3,
+          0.68,
+          0.95,
+          1.1
+        ]
+      },
+      {
+        "name": "Treated",
+        "x": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "y": [
+          0,
+          0.22,
+          0.41,
+          0.55,
+          0.62
+        ],
+        "accent": true
+      }
+    ]
+  },
+  "inputs": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "series"
+    ],
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "panel title, bold, left; no subtitle"
+      },
+      "x_label": {
+        "type": "string",
+        "description": "quantity / unit, mathtext allowed, e.g. $\\Delta E$ / eV"
+      },
+      "y_label": {
+        "type": "string"
+      },
+      "series": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 6,
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "x",
+            "y"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "x": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2
+            },
+            "y": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2
+            },
+            "accent": {
+              "type": "boolean",
+              "description": "draw this one series in the accent colour"
+            },
+            "markers": {
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "y_zero": {
+        "type": "boolean",
+        "description": "start the y axis at zero"
+      },
+      "style": {
+        "enum": [
+          "research",
+          "plain"
+        ],
+        "description": "research (default) follows the pack's plot style; plain is matplotlib's own"
+      }
+    }
+  }
+}

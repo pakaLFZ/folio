@@ -1,0 +1,17 @@
+# Workspace configuration. Machine-specific values (interpreter paths) go in
+# folio.local.toml beside this file, which git ignores.
+[workspace]
+decks = "decks"
+templates = "templates"
+
+[server]
+host = "127.0.0.1"
+port = 4310
+
+[queue]
+concurrency = 4
+per_hook = 2
+
+# The editor's corner holds only the rail toggle; true adds the Every deck link.
+[editor]
+show_deck_list = false

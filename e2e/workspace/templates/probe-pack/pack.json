@@ -1,0 +1,36 @@
+{
+  "name": "probe-pack",
+  "version": 1,
+  "description": "Test pack: a grid of hooked figure slots, and a slide whose text and table slots carry hooks.",
+  "canvas": { "w": 960, "h": 540, "unit": "pt" },
+  "roles": { "title": { "size": 20, "lineHeight": 1.2, "wrap": false }, "body": { "size": 14, "lineHeight": 1.2 } },
+  "tables": { "plain": { "size": 12, "lineHeight": 1.2, "cellPad": [2, 4, 2, 4], "rule": { "color": "#000000", "width": 0.5 } } },
+  "backgrounds": { "plain": { "fill": "#FFFFFF", "ink": "#000000" } },
+  "layouts": {
+    "grid": {
+      "background": "plain",
+      "description": "Title and six hooked figure slots.",
+      "slots": {
+        "title": { "role": "title", "box": [20, 10, 920, 30], "lines": 1 },
+        "fig:a": { "role": "figure", "box": [20, 60, 300, 200] },
+        "fig:b": { "role": "figure", "box": [330, 60, 300, 200] },
+        "fig:c": { "role": "figure", "box": [640, 60, 300, 200] },
+        "fig:d": { "role": "figure", "box": [20, 300, 300, 200] },
+        "fig:e": { "role": "figure", "box": [330, 300, 300, 200] },
+        "fig:f": { "role": "figure", "box": [640, 300, 300, 200] }
+      }
+    },
+    "notes": {
+      "background": "plain",
+      "description": "Title, a two-line note rewritten by the text-probe hook, a plain formula line, a table rewritten by the table-probe hook with a hooked caption flowing below it, and one figure slot.",
+      "slots": {
+        "title": { "role": "title", "box": [20, 10, 920, 30], "lines": 1 },
+        "note": { "role": "body", "box": [20, 60, 600, 40], "lines": 2, "hook": "text-probe" },
+        "formula": { "role": "body", "box": [20, 120, 600, 20], "lines": 1 },
+        "table:a": { "role": "table", "box": [20, 160, 600, 120], "tableStyle": "plain", "hook": "table-probe" },
+        "caption": { "role": "body", "box": [20, 160, 600, 360], "below": { "slot": "table:a", "gap": 6 }, "hook": "text-probe" },
+        "fig:a": { "role": "figure", "box": [640, 60, 300, 200], "hook": "probe" }
+      }
+    }
+  }
+}

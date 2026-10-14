@@ -1,0 +1,2 @@
+# Check out bytes exactly as committed on every OS, so Windows matches Linux.
+* -text

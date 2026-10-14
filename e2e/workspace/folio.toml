@@ -1,0 +1,9 @@
+# Test workspace for e2e/hooks-queue.mjs. The python runtime is given in
+# folio.local.toml, which the test writes for this machine.
+[workspace]
+decks = "decks"
+templates = "templates"
+
+[queue]
+concurrency = 4
+per_hook = 2

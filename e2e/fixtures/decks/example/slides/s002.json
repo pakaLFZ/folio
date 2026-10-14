@@ -1,0 +1,61 @@
+{
+  "root": "s",
+  "elements": {
+    "s": {
+      "type": "note-figure",
+      "props": {
+        "title": "ABSTRACT",
+        "subtitle": "Both paths open at room temperature",
+        "note": "A porous host has two kinds of pore, wide channels and narrow side pockets, joined by openings. When CO_{2} is taken up, a single CO_{2} moves from one pore to the next through an opening. Here it is asked how a single CO_{2} moves, turns and tilts in the empty host, and what energy each motion costs.\n\nFor Path A, the barrier is 0.52 to 0.55 eV, whether the molecule turns before, during or after the move, or not at all.\nFor Path B, the barrier is 0.61 to 0.63 eV with the molecule turned to pass along its axis, and 1.40 eV when it passes broadside without turning.\n\nTurning in place costs more in a narrow pocket than in a wide channel (0.30 to 0.45 eV against 0.04 to 0.06 eV). Paths that start with the molecule tilted 30° to 60° at the opening were also built, yet every one ends up passing along its axis, within 0.01 eV of the straight path.\n\nEvery barrier is found to fall as the host expands (0.08 to 0.12 eV per 1 % larger cell). Thus both openings are passed along the molecular axis, and Path B is found to cost 0.06 to 0.08 eV more than Path A.\n\nAn extra paragraph is added here so that the note runs past its line limit and the checker reports the overflow by line count, with the font size left unchanged.",
+        "label:a": "(a) Energy profile of each window",
+        "fig:a": {
+          "hook": "line-plot",
+          "inputs": {
+            "title": "Energy profile",
+            "x_label": "Reaction coordinate",
+            "y_label": "$\\Delta E$ / eV",
+            "series": [
+              {
+                "name": "Path A",
+                "x": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "y": [
+                  0,
+                  0.3,
+                  0.68,
+                  0.3,
+                  0
+                ]
+              },
+              {
+                "name": "Path B",
+                "x": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4
+                ],
+                "y": [
+                  0,
+                  0.4,
+                  0.74,
+                  0.35,
+                  0.05
+                ],
+                "accent": true
+              }
+            ]
+          }
+        },
+        "caption": "A caption that runs far too long for its single line, so that the checker reports it as running past the width of its box, which never wraps any text at all, however long."
+      },
+      "children": []
+    }
+  }
+}

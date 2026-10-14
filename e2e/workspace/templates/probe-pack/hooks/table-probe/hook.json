@@ -1,0 +1,10 @@
+{
+  "name": "table-probe",
+  "version": 1,
+  "output": "table",
+  "description": "Test table hook: upper-cases every cell; a FAIL cell fails, a GROW cell adds ten rows.",
+  "runtime": "python",
+  "command": ["transform.py"],
+  "entry": "transform:transform",
+  "timeout": 5
+}
