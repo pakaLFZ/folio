@@ -76,7 +76,9 @@
   needs them. It is the one thing an agent needs: with only the skill it can
   install folio from its repository, make a workspace, write slides, draw
   figures, make or convert a template and answer the user's comments
-  *(user, 2026-10-14: "ideally they only need this skill")*. Every agent
+  *(user, 2026-10-14: "ideally they only need this skill")*. It is published on skills.sh as
+  `https://www.skills.sh/pakalfz/folio`; `skills.sh.json` at the repository
+  root sets that page's grouping *(user, 2026-10-14)*. Every agent
   working on a folio deck follows it: arm the watch first
   (`folio watch --deck <deck>` under the Monitor tool, or `folio watch --once`
   in the background, re-armed with `--since`; without background tools,

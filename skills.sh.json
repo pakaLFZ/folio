@@ -1,0 +1,10 @@
+{
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "folio",
+      "description": "Make, fix and review slide decks with folio: install it, write slides into template packs, draw figures, convert PowerPoint templates, and answer the user's comments from the live editor.",
+      "skills": ["folio"]
+    }
+  ]
+}
