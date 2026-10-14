@@ -49,8 +49,32 @@ delete. Split from `editing.md` (2026-10-13) when it passed 500 lines.
   figures, tables, blocks) is a box that moves and resizes like a PowerPoint
   placeholder, with the frame, handles, drag, snapping and nudging the text
   boxes and shapes already have; the result is the slide's box override.
+- On a screenshot of the bottom toolbar with Region, Pen, Rectangle, Arrow,
+  Undo and Eraser boxed together: "group these all together, following the
+  select ... and when one of them is selected, show a note that these are
+  for draft making and will not actually edit the slide" *(user,
+  2026-10-14)*. Reading: those six sit as one visible cluster right after
+  the Cursor tool, and while one of the five selectable ones (Region, Pen,
+  Rectangle, Arrow, Eraser) is the active tool, a small note above the
+  toolbar says the marks are drafts for comments, not slide edits.
 
 ## Behaviour
+
+### The draft tools group
+
+- **The cluster.** Cursor, then a divider, then one unbroken group — Region,
+  Pen, Rectangle, Arrow, Undo, Eraser — then, when the Shape and Text tools
+  are offered, another divider before them. The group carries no divider of
+  its own between Arrow and Undo: it reads as the single cluster the user
+  boxed, bounded by the toolbar's existing dividers rather than a new
+  container style.
+- **The note.** While the active tool is one of Region, Pen, Rectangle,
+  Arrow or Eraser (Undo is an action, never an active tool), a small card
+  above the toolbar, in the same rounded-card/border-line/bg-surface style
+  as the tool tooltips, reads "Draft marks for comments: they do not edit
+  the slide." It hides the moment Cursor, the Shape tool or the Text tool is
+  current. It takes no pointer events, so it never blocks the canvas or the
+  toolbar underneath it.
 
 ### Shapes in the editor
 
