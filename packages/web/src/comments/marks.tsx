@@ -31,7 +31,13 @@ export function RegionOverlay({ canvas, region: [x, y, w, h] }: { canvas: { w: n
 }
 
 /**
- * The SVG of one mark.
+ * The SVG of one mark (pen, rectangle or arrow), inverting whatever colour
+ * lies under it the same way the region border and the shape outline do
+ * (`mix-blend-mode: difference` on a white stroke): white over a dark slide,
+ * ink over a light one, so a pen stroke or a rectangle stays visible on a
+ * black title slide as on a white one. *(Superseded 2026-10-14: a fixed ink
+ * stroke, `MARK_INK`, invisible against a near-black background since
+ * difference against black returns the same colour.)*
  *
  * @param mark - the mark.
  * @param weight - stroke width in pt.
@@ -39,7 +45,7 @@ export function RegionOverlay({ canvas, region: [x, y, w, h] }: { canvas: { w: n
  */
 export function MarkShape({ mark, weight = 2 }: { mark: Mark; weight?: number }) {
   const pts = mark.points;
-  const common = { fill: "none", stroke: MARK_INK, strokeWidth: weight, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, vectorEffect: "non-scaling-stroke" as const };
+  const common = { fill: "none", stroke: "#ffffff", strokeWidth: weight, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, vectorEffect: "non-scaling-stroke" as const, style: { mixBlendMode: "difference" as const } };
   if (mark.tool === "pen") return pts.length > 1 ? <polyline points={pts.map((p) => p.join(",")).join(" ")} {...common} /> : null;
   if (pts.length < 2) return null;
   const [[x1, y1], [x2, y2]] = [pts[0]!, pts[pts.length - 1]!];

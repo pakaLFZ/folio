@@ -3,7 +3,7 @@
  * and the draft being written (region, sketch, text, uploads), saved to the
  * server about a second after each change so nothing is lost.
  */
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import type { Box, FolioComment, Mark } from "@folio/core";
 import { call } from "../api";
 import { at } from "../boot";
@@ -172,7 +172,10 @@ function useFocus() {
 function useDraft(store: DeckStore, token: string) {
   const [draft, setDraft] = useState<DraftState | null>(null);
   const dirty = useRef(false);
+  const draftRef = useRef<DraftState | null>(null);
+  draftRef.current = draft;
   useDraftRestore(token, setDraft, store);
+  useSlideDraft(store, token, draftRef, setDraft);
   useEffect(() => {
     if (!draft || !dirty.current) return;
     const t = setTimeout(() => {
@@ -184,11 +187,53 @@ function useDraft(store: DeckStore, token: string) {
   const editDraft = useCallback(
     (update: (d: DraftState) => DraftState) => {
       dirty.current = true;
-      setDraft((d) => update(d ?? newDraft(store)));
+      const slide = store.get().current ?? "";
+      setDraft((d) => update(d && d.slide === slide ? d : newDraft(store)));
     },
     [store],
   );
   return { draft, setDraft, editDraft };
+}
+
+/**
+ * Keep the open draft matched to the current slide. Without this, drawing
+ * after a slide switch silently wrote its marks into the draft left on the
+ * slide behind (its `slide` field never moved), so the new mark showed
+ * nowhere and the old slide gained marks that were never drawn on it: "the
+ * drawing disappears on slide for some reason" *(user, 2026-10-14)*. When the
+ * current slide no longer owns the in-memory draft, its own saved draft (if
+ * the user had one going, from the autosave a second after each change) is
+ * loaded back in its place, rather than starting over or keeping the wrong
+ * one. The draft left behind is flushed to disk first (the 1 s autosave may
+ * not have fired yet), so a switch away never drops a mark drawn moments
+ * before.
+ */
+function useSlideDraft(store: DeckStore, token: string, draftRef: RefObject<DraftState | null>, setDraft: (d: DraftState | null) => void): void {
+  const current = useDeck(store).current;
+  const seen = useRef(current);
+  useEffect(() => {
+    if (seen.current === current) return;
+    seen.current = current;
+    const leaving = draftRef.current;
+    if (leaving?.slide === current) return;
+    let cancelled = false;
+    const flush = leaving
+      ? call(`${token}/drafts/${leaving.id}`, { method: "PUT", json: { ...leaving, uploads: leaving.uploads.map((u) => u.id), uploadsMeta: leaving.uploads } }).catch(() => {})
+      : Promise.resolve();
+    void flush
+      .then(() => call<{ drafts: (DraftState & { uploadsMeta?: Upload[] })[] }>(`${token}/drafts`))
+      .then(
+        (r) => {
+          if (cancelled) return;
+          const found = r.drafts.find((d) => d.slide === current);
+          setDraft(found ? { ...found, uploads: found.uploadsMeta ?? [] } : null);
+        },
+        () => {},
+      );
+    return () => {
+      cancelled = true;
+    };
+  }, [current, token, draftRef, setDraft]);
 }
 
 /**
