@@ -11,7 +11,8 @@
   compared or printed is written with `/` (`relative` and `toPosix` from
   `packages/server/src/posixpath.ts`), never split on a literal `/` while it
   is still OS-native; `.gitattributes` keeps every file's bytes as committed.
-- The editor chrome follows `theme/cavitas/`; slide content follows its pack.
+- The editor chrome follows `packages/web/src/styles.css` and
+  `packages/web/PRODUCT.md`; slide content follows its pack.
 - Read `folio pack guide` before converting, merging or editing a pack
   (`spec/slides/pack-tools.md`). `templates/lectern` is the bundled example
   pack.

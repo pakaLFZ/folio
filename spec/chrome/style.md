@@ -38,8 +38,6 @@
 - Install impeccable and import cavitas's style: the editor chrome (panels,
   toolbar, comment threads) follows cavitas's design; the slide content
   follows the deck pack, not cavitas. *(user, 2026-10-12)*
-- Load the impeccable skill before any UI work; use the theme in
-  `theme/cavitas`. *(user, 2026-10-12)*
 - "remove red bit": the red overflow counters and the comment pins drawn on
   the slide in Edit mode are gone. *(user, 2026-10-12)*
 - Of the top-left corner (the toggles, the mode pill and the rail of slide
@@ -560,7 +558,7 @@ Lowest text contrast: Light, faint on `ash` 5.43:1; Dark, faint on `ash`
 `packages/web/src/styles.css`, `packages/web/src/ui/`, `packages/web/PRODUCT.md`,
 the pane grips in `packages/web/src/editor/ResizeHandle.tsx` and their widths in
 `packages/web/src/editor/paneWidths.ts`,
-`theme/cavitas/`; the control in `packages/web/src/ui/ThemeSwitch.tsx`, the notice in
+`packages/web/src/styles.css`; the control in `packages/web/src/ui/ThemeSwitch.tsx`, the notice in
 `packages/web/src/ui/notice.tsx` (`.notice` in `styles.css`), the
 pre-paint script in `packages/web/index.html`. The top row's corner buttons,
 the mode switch, the Home button and the Copy deck id button, and the zoom

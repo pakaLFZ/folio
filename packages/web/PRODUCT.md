@@ -35,7 +35,7 @@ Per-slot line limits declared once in the template and checked by the same rende
 
 ## Brand Commitments
 
-- The editor chrome follows the cavitas theme (`theme/cavitas/`): an achromatic laboratory instrument, hairlines not shadows, 6 px controls (no pills, user 2026-10-12), monospace tabular numbers, one frosted pane over the scene. In folio the slide is the scene.
+- The editor chrome is an achromatic laboratory instrument, hairlines not shadows, 6 px controls (no pills, user 2026-10-12), monospace tabular numbers, one frosted pane over the scene. In folio the slide is the scene.
 - Slide content never takes chrome tokens; it takes the deck's template pack.
 
 ## Evidence on Hand

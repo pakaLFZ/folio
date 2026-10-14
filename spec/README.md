@@ -21,7 +21,7 @@ Every file has the same parts:
 The standing priorities are that **text never shrinks to fit** (a slot that
 holds too much is a warning, never a smaller font), that **a warning never
 fails a build**, and that **parallel writers never share a file** (one file per
-slide, per comment, per slot state). The warning model is `WARNINGS.md`; the editor's visual system is `theme/cavitas/` and
+slide, per comment, per slot state). The warning model is `WARNINGS.md`; the editor's visual system is `packages/web/src/styles.css` and
 `packages/web/PRODUCT.md`.
 
 | Folder | File | Topic |
