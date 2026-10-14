@@ -151,7 +151,8 @@ try {
   const response = await page.request.post(base + '/export-pptx', { timeout: 180000 });
   const files = unzipSync(Buffer.from(await response.body()));
   const xml = strFromU8(files['ppt/slides/slide1.xml']);
-  check('PPTX uses editable runs with size and colour', response.ok() && /<a:r><a:rPr[^>]*sz="2400"/.test(xml) && xml.includes('C71585') && xml.includes('<a:t xml:space="preserve">second</a:t>'));
+  const captionShape = xml.slice(xml.indexOf('name="caption"'), xml.indexOf('</p:sp>', xml.indexOf('name="caption"')));
+  check('PPTX uses editable runs with size and colour', response.ok() && /<a:r><a:rPr[^>]*sz="2400"/.test(captionShape) && captionShape.includes('9C2E6B') && captionShape.includes('<a:t xml:space="preserve">second</a:t>'));
 } finally {
   await browser.close();
   await server.stop();

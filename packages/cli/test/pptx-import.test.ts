@@ -8,7 +8,7 @@ import { writePptx } from "../src/pptx/write.js";
 import { fileURLToPath } from "node:url";
 
 const fixture = fileURLToPath(new URL("./fixtures/fixture.pptx", import.meta.url));
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 const templates = () => mkdtempSync(join(tmpdir(), "folio-import-"));
 const packOf = (dir: string) => JSON.parse(readFileSync(join(dir, "pack.json"), "utf8"));
 
@@ -78,7 +78,7 @@ describe("folio pack export --pptx", () => {
   };
 
   it("imports back to the same layouts, slot boxes and roles, backgrounds and table style (lectern)", () => {
-    const { before, after } = roundTrip(nusIcl);
+    const { before, after } = roundTrip(lecternDir);
     expect(Object.keys(after.layouts)).toEqual(Object.keys(before.layouts));
     for (const [name, layout] of Object.entries<any>(before.layouts)) {
       expect(Object.keys(after.layouts[name].slots).sort()).toEqual(Object.keys(layout.slots).sort());
@@ -86,7 +86,7 @@ describe("folio pack export --pptx", () => {
       expect(after.layouts[name].background).toBe(layout.background);
     }
     expect(after.backgrounds).toEqual(before.backgrounds);
-    expect(after.tables.default).toMatchObject({ headerFill: "#000000", headerInk: "#FFFFFF", size: 14, rule: before.tables.default.rule });
+    expect(after.tables.default).toMatchObject({ headerFill: "#EFEDE7", headerInk: "#17191C", size: 14, rule: before.tables.default.rule });
     expect(after.layouts.title.decorations).toHaveLength(before.layouts.title.decorations.length);
   }, 30_000); // zips and unzips the pack's fonts: about 2 s alone, past the 5 s default under a full parallel run
 });

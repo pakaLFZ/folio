@@ -9,12 +9,12 @@ import { deckExportRoutes, FolioApp, loadConfig, Router } from "@folio/server";
 import { importDeckCommand } from "../src/deckimport.js";
 import { fileURLToPath } from "node:url";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 const scratch = (name: string) => mkdtempSync(join(tmpdir(), `folio-${name}-`));
 
 function workspace(): string {
   const root = scratch("download");
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   const deck = join(root, "decks/talk");
   mkdirSync(join(deck, "slides"), { recursive: true });

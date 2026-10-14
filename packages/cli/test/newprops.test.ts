@@ -7,12 +7,12 @@ import { describe, expect, it, vi } from "vitest";
 import { makeSlideSpec } from "@folio/core";
 import { newCommand } from "../src/deckcmds.js";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 const bin = fileURLToPath(new URL("../bin/folio.mjs", import.meta.url));
 
 function workspace(): string {
   const root = mkdtempSync(join(tmpdir(), "folio-newprops-"));
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   const deck = join(root, "decks/talk");
   mkdirSync(join(deck, "slides"), { recursive: true });

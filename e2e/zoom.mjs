@@ -263,7 +263,7 @@ for (const id of [railIds[6], railIds[0], railIds.at(-1), railIds[6]]) {
 // meaning not the tool", user, 2026-10-13): an arrow with Select, the pen with Pen.
 const cursorOnSlide = () => page.evaluate(() => {
   const r = document.querySelector("main [data-column-slide][data-current]").getBoundingClientRect();
-  return getComputedStyle(document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2)).cursor;
+  return getComputedStyle(document.elementFromPoint(r.x + r.width * 0.02, r.y + r.height * 0.02)).cursor;
 });
 const selectCursor = await cursorOnSlide();
 await page.keyboard.press("p");

@@ -11,13 +11,13 @@ import type { DeckStore } from "../src/deckstore.js";
 import { listQuestions, QuestionError, QuestionService } from "../src/questions/service.js";
 import { fileURLToPath } from "node:url";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 const opened: FolioApp[] = [];
 
 /** Services over a temporary workspace with one two-slide deck, recording the events emitted. */
 function setup() {
   const root = mkdtempSync(join(tmpdir(), "folio-q-"));
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   const deck = join(root, "decks/talk");
   mkdirSync(join(deck, "slides"), { recursive: true });

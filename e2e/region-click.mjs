@@ -18,8 +18,8 @@ await still(page);
 await page.keyboard.press("r");
 await page.getByRole("radio", { name: /^Region/, checked: true }).waitFor({ timeout: 3000 });
 
-// fig:a's box in the lectern pack is [494.8, 132.8, 439.6, 360.2] of the 960x540 canvas.
-const FIG = { x: 494.8, y: 132.8, w: 439.6, h: 360.2 };
+// fig:a's box in the lectern pack is [464, 140, 448, 338] of the 960x540 canvas.
+const FIG = { x: 464, y: 140, w: 448, h: 338 };
 const bubble = page.locator('[role="dialog"][aria-label="New comment"]');
 const regions = () => page.locator("main svg rect[stroke-dasharray]").count();
 const watchDragstart = (p) => p.evaluate(() => (window.__drags = 0, addEventListener("dragstart", () => window.__drags++, { capture: true })));

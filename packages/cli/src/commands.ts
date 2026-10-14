@@ -146,7 +146,7 @@ export function usage(): string {
     "                                                 one line per comment, thread message, reopen, hold or answer from the user,",
     "                                                 never an agent's own; runs until killed; --once exits 0 after the first line;",
     "                                                 --since TIME (a line's first field) prints what came after it first; exit 4 at --timeout",
-    "  skill show | install [--project | --user] [--force]  the folio agent skill: print it, or copy it to .claude/skills/folio/",
+    "  skill show | install [--project | --user] [--force]  the folio agent skill: print it, or copy its folder to .claude/skills/folio/",
     "  quickstart                                     a worked example: init-deck, slides with a picture and a table, shot, check, pptx",
     "  comments <deck> [--json] [--all]               open comments: slots, thread, turn, screenshot paths",
     "  comment reply <cid> \"text\" [--attach F]...   reply as --worker W (default agent); --answered marks it done",

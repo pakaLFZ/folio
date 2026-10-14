@@ -5,11 +5,11 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it, vi } from "vitest";
 import { layoutsCommand } from "../src/layoutscmd.js";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 
 function workspace(): string {
   const root = mkdtempSync(join(tmpdir(), "folio-layouts-"));
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   mkdirSync(join(root, "decks/talk/slides"), { recursive: true });
   writeFileSync(join(root, "decks/talk/deck.json"), JSON.stringify({ id: "c0ffee00c0ffee02", title: "Talk", template: "lectern@1", order: [] }));
@@ -28,7 +28,7 @@ async function folio(root: string, args: string[]): Promise<{ status: number; st
     write.mockRestore();
   }
 }
-const pack = JSON.parse(readFileSync(join(nusIcl, "pack.json"), "utf8"));
+const pack = JSON.parse(readFileSync(join(lecternDir, "pack.json"), "utf8"));
 
 describe("folio layouts", () => {
   const root = workspace();
@@ -47,11 +47,11 @@ describe("folio layouts", () => {
     const run = await folio(root, ["note-figure", "plot-table"]);
     expect(run.status, run.stderr).toBe(0);
     expect(run.stdout).not.toMatch(/^summary-table:/m);
-    expect(run.stdout).toMatch(/^ {2}title +title +\[25\.7, 19\.8, 908\.7, 29\.8\] +26 pt, 1 line, 90 chars, hook chem-subscripts$/m);
-    expect(run.stdout).toMatch(/^ {2}fig:a +figure +\[494\.8, 132\.8, 439\.6, 360\.2\] +file or hook line-plot$/m);
-    expect(run.stdout).toMatch(/^ {2}table:b +table +\[490, 117\.6, 444\.4, 340\] +14 pt, \d+ rows, style default$/m);
-    expect(run.stdout).toMatch(/^ {2}note +note +\[490, 251\.6, 444\.4, 233\] .*below table:b \+12$/m);
-    expect(run.stdout).toMatch(/^note-figure: A justified note on the left/m);
+    expect(run.stdout).toMatch(/^ {2}title +title +\[48, 32, 864, 34\] +24 pt, 1 line, 75 chars, hook chem-subscripts$/m);
+    expect(run.stdout).toMatch(/^ {2}fig:a +figure +\[464, 140, 448, 338\] +file or hook line-plot$/m);
+    expect(run.stdout).toMatch(/^ {2}table:b +table +\[496, 140, 416, 220\] +14 pt, \d+ rows, style default$/m);
+    expect(run.stdout).toMatch(/^ {2}note +note +\[496, 300, 416, 178\] .*below table:b \+14$/m);
+    expect(run.stdout).toMatch(/^note-figure: A note on the left and one labelled figure on the right/m);
     expect(run.stdout).toMatch(/^ {2}background plain$/m);
   });
 
@@ -62,7 +62,7 @@ describe("folio layouts", () => {
     expect(sheet.layouts.map((l: { name: string }) => l.name)).toEqual(["plot-table"]);
     const slots = Object.fromEntries(sheet.layouts[0].slots.map((s: { name: string }) => [s.name, s]));
     expect(slots["fig:a"]).toEqual({ name: "fig:a", role: "figure", box: pack.layouts["plot-table"].slots["fig:a"].box, takes: "file or hook", hook: "line-plot" });
-    expect(slots.note.below).toEqual({ slot: "table:b", gap: 12 });
+    expect(slots.note.below).toEqual({ slot: "table:b", gap: 14 });
   });
 
   it("refuses a layout the pack lacks, listing its layouts", async () => {

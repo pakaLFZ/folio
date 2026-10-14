@@ -63,6 +63,8 @@ python = "/path/to/python"
 
 ## For agents
 
+An agent needs only the folio skill, `skills/folio/`: it says how to install folio, set up a workspace, write slides and answer the user's comments. Install it into a workspace with `folio skill install` (or `--user`), or from this repository with any Agent Skills installer, e.g. `npx skills add pakaLFZ/folio`.
+
 Start with the instructions generated from the deck's pack; they list every layout, slot, line limit, character rule and hook input:
 
 ```sh

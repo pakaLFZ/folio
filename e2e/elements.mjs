@@ -55,7 +55,7 @@ const source = JSON.parse(readFileSync(join(root, "decks/d/slides/s001.json"), "
 check("Ctrl+V on another slide adds the copied table as an added slot, with its rows", JSON.stringify(pasted) === JSON.stringify(table) && slots("s002")["table:a"].role === "table", JSON.stringify(slots("s002")["table:a"]));
 check("the source table is left as it was", JSON.stringify(source.elements.s.props["table:a"]) === JSON.stringify(table), "s001 kept");
 
-await page.locator('[data-shape-hit="fig:a"]').click({ position: { x: 5, y: 5 } });
+await page.locator('[data-shape-hit="fig:a"]').click({ position: { x: 3, y: 150 } });
 await page.keyboard.press(`${mod}+x`);
 const cut = await until(() => !("fig:a" in props("s002")));
 check("Ctrl+X on a figure of the layout clears it; the slot stays in the layout", !!cut && !slots("s002")["fig:a"], JSON.stringify(Object.keys(props("s002"))));

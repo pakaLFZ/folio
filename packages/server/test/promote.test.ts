@@ -9,13 +9,13 @@ import { promoteSlide } from "../src/promote.js";
 import { Workspace } from "../src/workspace.js";
 import { fileURLToPath } from "node:url";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 const OVERRIDES = { background: "black", slots: { note: { box: [25.7, 160, 439.6, 300], text: { size: 20 } } } };
 
 /** A workspace with lectern and one deck of three note-figure slides; s001 carries overrides. */
 function workspace(): { root: string; ws: Workspace } {
   const root = mkdtempSync(join(tmpdir(), "folio-promote-"));
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   const deck = join(root, "decks/talk");
   mkdirSync(join(deck, "slides"), { recursive: true });
@@ -60,7 +60,7 @@ describe("promote a slide's overrides", () => {
     expect(after.includes("\r")).toBe(false);
     expect(after.startsWith(before.slice(0, before.indexOf('"cover-title"')))).toBe(true);
     const pack = ws.packOf(store)!.pack;
-    expect(pack.version).toBe(2);
+    expect(pack.version).toBe(1);
     expect(pack.layouts["note-figure-low"]!.slots.note).toMatchObject({ box: OVERRIDES.slots.note.box, style: "note-figure-low-note" });
     const root1 = slideRoot(store.readSlide("s001")!.spec!)!;
     expect(root1.layout).toBe("note-figure-low");

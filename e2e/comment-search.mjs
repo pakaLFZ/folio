@@ -12,9 +12,9 @@ const post = (path, body, worker) => fetch(`${base}/${path}`, { method: "POST", 
 const a = server.token("example");
 const b = server.token("example-b");
 const tag = `wombat${Date.now().toString(36)}`;
-const open = await post(`${a}/comments`, { slide: "s002", region: [494, 110, 440, 100], marks: [], text: `${tag} the isotherm axis is unlabelled` });
-const resolved = await post(`${a}/comments`, { slide: "s002", region: [25, 110, 440, 100], marks: [], text: `${tag} shorten the note` });
-const archived = await post(`${b}/comments`, { slide: "s001", region: [25, 110, 440, 100], marks: [], text: `${tag} wrong barrier height` });
+const open = await post(`${a}/comments`, { slide: "s002", region: [480, 160, 200, 100], marks: [], text: `${tag} the isotherm axis is unlabelled` });
+const resolved = await post(`${a}/comments`, { slide: "s002", region: [60, 120, 300, 100], marks: [], text: `${tag} shorten the note` });
+const archived = await post(`${b}/comments`, { slide: "s001", region: [60, 120, 300, 100], marks: [], text: `${tag} wrong barrier height` });
 await post(`${a}/comments/${resolved.id}/reply`, { text: `Cut it to two lines; the quench${tag} sentence went.` }, "w9");
 writeFileSync(join(root, `${tag}-spectrum.csv`), "x,y\n1,2\n");
 cli(["comment", "reply", open.id, "Axis labelled; data attached.", "--attach", join(root, `${tag}-spectrum.csv`), "--worker", "w9"]);

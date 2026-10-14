@@ -32,16 +32,16 @@ const renames = [...r.out.matchAll(/--rename ([\w.:-]+)=<new>/g)].flatMap((m) =>
 check("merge refuses clashing styles and names each --rename", r.code === 2 && renames.length > 0, `${renames.length / 2} renames named`);
 r = folio(["pack", "merge", "fx", "lectern", "--layouts", "title-only-s1", ...renames]);
 const merged = JSON.parse(packJson("lectern"));
-check("merge with the renames copies the layout and keeps the version", r.code === 0 && merged.layouts["title-only-s1"] && merged.version === 2, r.out.split("\n").slice(-1)[0]);
+check("merge with the renames copies the layout and keeps the version", r.code === 0 && merged.layouts["title-only-s1"] && merged.version === 1, r.out.split("\n").slice(-1)[0]);
 check("lectern keeps its LF endings", !packJson("lectern").includes("\r"), "no CR added");
 
 r = folio(["pack", "edit", "lectern", "layout", "rename", "title-only-s1", "results"]);
 const pinned = JSON.parse(readFileSync(join(root, "decks/example/deck.json"), "utf8")).template;
-check("rename bumps the version and re-pins the decks", r.code === 0 && JSON.parse(packJson("lectern")).version === 3 && pinned === "lectern@3", `${r.out.split("\n").filter((l) => l.startsWith("version") || l.startsWith("re-pinned")).length} lines; deck on ${pinned}`);
+check("rename bumps the version and re-pins the decks", r.code === 0 && JSON.parse(packJson("lectern")).version === 2 && pinned === "lectern@2", `${r.out.split("\n").filter((l) => l.startsWith("version") || l.startsWith("re-pinned")).length} lines; deck on ${pinned}`);
 r = folio(["pack", "edit", "lectern", "layout", "remove", "note-figure"]);
 check("removing a layout a deck uses is refused, naming the slide", r.code === 2 && /decks\/example\/s\d+/.test(r.out), r.out.split("\n")[1] ?? r.out);
 r = folio(["pack", "edit", "lectern", "set", "roles.note.size=15"]);
-check("set keeps the version", r.code === 0 && r.out.includes("version 3 kept") && JSON.parse(packJson("lectern")).roles.note.size === 15, r.out.trim().split("\n").join(" | "));
+check("set keeps the version", r.code === 0 && r.out.includes("version 2 kept") && JSON.parse(packJson("lectern")).roles.note.size === 15, r.out.trim().split("\n").join(" | "));
 
 const zip = join(root, "lectern.zip");
 const pptx = join(root, "lectern.pptx");
@@ -52,7 +52,7 @@ mkdirSync(join(other, "templates"), { recursive: true });
 writeFileSync(join(other, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
 execFileSync("unzip", ["-q", zip, "-d", join(other, "unzipped")]);
 r = folio(["pack", "import", join(other, "unzipped/lectern")], other);
-check("the zip installs in another workspace", r.code === 0 && JSON.parse(packJson("lectern", other)).version === 3, r.out.trim());
+check("the zip installs in another workspace", r.code === 0 && JSON.parse(packJson("lectern", other)).version === 2, r.out.trim());
 r = folio(["pack", "import", pptx, "--name", "back"]);
 const back = JSON.parse(packJson("back"));
 check("the pptx imports back with the same layouts", r.code === 0 && Object.keys(back.layouts).join() === Object.keys(JSON.parse(packJson("lectern")).layouts).join(), `${Object.keys(back.layouts).length} layouts`);

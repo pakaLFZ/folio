@@ -35,6 +35,6 @@ describe("text boxes", () => {
     expect(withChange({}, { fill: null }).padding).toBeUndefined();
   });
   it("offers the pack's font families", () => {
-    expect(fontFamilies(pack)).toEqual(["Liberation Sans", "Roboto", "Liberation Mono"]);
+    expect(fontFamilies(pack)).toEqual(["IBM Plex Sans", "IBM Plex Serif", "IBM Plex Mono"]);
   });
 });

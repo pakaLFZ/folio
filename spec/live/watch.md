@@ -69,15 +69,23 @@
 
 ### The folio skill
 
-- folio ships a Claude Code skill, `skills/folio/SKILL.md` (`name: folio`),
-  that every agent working on a folio deck follows: arm the watch first
+- folio ships an agent skill in the Agent Skills layout, `skills/folio/`:
+  `SKILL.md` (`name: folio`, a description that triggers on any folio or
+  slide-deck task) and `references/` (`install.md`, `quickstart.md`,
+  `comments.md`, `figures.md`, `packs.md`, `cli.md`), read only when a step
+  needs them. It is the one thing an agent needs: with only the skill it can
+  install folio from its repository, make a workspace, write slides, draw
+  figures, make or convert a template and answer the user's comments
+  *(user, 2026-10-14: "ideally they only need this skill")*. Every agent
+  working on a folio deck follows it: arm the watch first
   (`folio watch --deck <deck>` under the Monitor tool, or `folio watch --once`
   in the background, re-armed with `--since`; without background tools,
   `folio inbox --status queue` before and after every step), and on each line
   read the comment, assign it, act, reply with `--answered`, and say in one
   chat line what was done. It also carries the working loop (`folio prompt`,
   `folio viewing`, `folio shot --sheet`, `folio check`, `folio ask`).
-- `folio skill install [--project | --user] [--force]` copies it to
+- `folio skill install [--project | --user] [--force]` copies the whole
+  folder, `references/` included, to
   `<workspace>/.claude/skills/folio/` (the default) or
   `~/.claude/skills/folio/`. An installed copy that differs from the shipped
   one is not overwritten without `--force`; the refusal prints the lines that
@@ -92,11 +100,12 @@
   workspace root (the folder holding `folio.toml`); a figure is a path
   relative to the deck, so a picture from elsewhere is copied into
   `decks/<deck>/fig/` and written `fig/name.png`; run `folio doctor` and fix
-  each FAIL (hooks use `[runtimes] python` in `folio.local.toml`, else python3
+  each FAIL; when `folio` is missing, install it first
+  (`references/install.md`) (hooks use `[runtimes] python` in `folio.local.toml`, else python3
   or python on PATH; with neither every hooked text slot reports
   FOLIO-HOOK-006, 2026-10-14); write
-  each slide in one call with `folio new ... --props`. The skill stays under
-  about 120 lines.
+  each slide in one call with `folio new ... --props`. `SKILL.md` stays under
+  about 120 lines; detail goes in `references/`.
 - `folio prompt` ends with: "Keep a watch on the user's comments: `folio
   watch --deck <deck>` (see the folio skill)."
 
@@ -121,9 +130,9 @@
 - It names the pack `lectern@1` and its layouts as the example and says to
   take another pack's names from `folio layouts`. On PowerShell, where a
   heredoc does not exist, the JSON goes in a file passed as `--props p.json`.
-- Its text is one file shipped with the skill, `skills/folio/quickstart.md`,
-  so `folio skill install` copies it beside `SKILL.md` and the two never
-  drift.
+- Its text is one file shipped with the skill,
+  `skills/folio/references/quickstart.md`, so `folio skill install` copies it
+  with `SKILL.md` and the two never drift.
 
 ## Never
 
@@ -152,7 +161,7 @@ or not at all is not yet confirmed.
 `packages/core/src/watchevents.ts` (what counts as an event, and its line),
 `packages/cli/src/eventwatch.ts` (`folio watch`), `packages/cli/src/skillcmd.ts`
 (`folio skill`, `folio quickstart`, the hint), `skills/folio/SKILL.md`,
-`skills/folio/quickstart.md`,
+`skills/folio/references/`,
 `packages/core/src/catalog.ts` (the prompt line).
 
 ## Checks

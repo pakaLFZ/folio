@@ -7,11 +7,57 @@
 // while the pack's file stays byte for byte. A slide whose only finding is FOLIO-VOC-001 has no red rail dot
 // (user: "vocab check dont leave reddot on page"); an overflowing slide keeps its dot.
 import { chromium } from "playwright";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { start, until, workspace } from "./lib/server.mjs";
 
+// lectern ships an empty Use/Never table; this check needs a bank with enough entries to exercise
+// inheritance, warnings and the editor, so its own workspace copy of lectern gets a richer fixture bank.
+const FIXTURE_BANK = `# Vocabulary bank
+
+The user's words and phrasing for slide text, learned from the user's own edits.
+
+## Words to use, and their replacements
+
+| Use | Never | Since |
+|---|---|---|
+| the SC the H passes through | channel | 2026-10-07 |
+| rotation (about an axis) | turn, turning, flip, sense | 2026-10-08 |
+| opposite (rotation, direction) | counter, reverse | 2026-10-08 |
+| with CO₂; with travelling CO₂ (moving guest) | loaded, laden | 2026-10-09 |
+| 1 CO₂ (a count of one) | single CO₂, one CO₂ | 2026-10-12, user: "try to consistently use 1 co2" |
+| the narrow site | pocket | 2026-10-10, user: "consider change pocket to cavity" |
+| uptake | adsorption amount | 2026-10-11 |
+| guest | molecule, species | 2026-10-11 |
+| host | framework, lattice | 2026-10-11 |
+| barrier | activation energy | 2026-10-11 |
+| site | position, location | 2026-10-11 |
+| window | aperture | 2026-10-11 |
+| cell | unit cell, box | 2026-10-11 |
+| path | trajectory, route | 2026-10-11 |
+| step | hop, jump | 2026-10-11 |
+| energy profile | energy curve | 2026-10-11 |
+| axis | direction, orientation | 2026-10-11 |
+| tilt | incline, lean | 2026-10-11 |
+
+## Phrasing
+
+- A title names the page's subject.
+
+## Abstract structure
+
+> For one step, every guest moves at once, then the next step begins.
+
+## Content
+
+- A page holding one item centres it.
+
+## Status (log of the user's edits)
+
+- 2026-10-10, slide 735: "pocket" became "the narrow site".
+`;
 const root = workspace({ decks: ["example"] });
+writeFileSync(join(root, "templates/lectern/vocabulary.md"), FIXTURE_BANK);
 const server = await start(root);
 const results = [];
 const check = (name, ok, detail) => (results.push(ok), console.log(`${ok ? "PASS" : "FAIL"} ${name}: ${detail}`));

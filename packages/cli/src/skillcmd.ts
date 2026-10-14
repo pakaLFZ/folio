@@ -1,21 +1,22 @@
 /**
  * `folio skill show | install [--project | --user] [--force]`: the agent skill
- * folio ships (`skills/folio/`), which tells every agent on a deck to keep a
- * watch on the user's comments. Install copies it to the workspace's
+ * folio ships (`skills/folio/`, `SKILL.md` and `references/`), which tells
+ * every agent how to install folio, write a deck and keep a watch on the
+ * user's comments. Install copies the folder to the workspace's
  * `.claude/skills/folio/` or the user's `~/.claude/skills/folio/`, and never
  * overwrites a copy that differs without `--force`. `folio quickstart` prints
- * the worked example shipped beside it (`skills/folio/quickstart.md`).
+ * the worked example shipped with it (`skills/folio/references/quickstart.md`).
  */
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { relative } from "@folio/server";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { findWorkspace } from "@folio/server";
 
 export const SHIPPED_SKILL = fileURLToPath(new URL("../../../skills/folio/", import.meta.url));
-export const QUICKSTART = join(SHIPPED_SKILL, "quickstart.md");
+export const QUICKSTART = join(SHIPPED_SKILL, "references", "quickstart.md");
 const SKILL_PATH = join(".claude", "skills", "folio");
 
 export type SkillScope = "project" | "user";
@@ -48,6 +49,14 @@ export function lineDiff(installed: string, shipped: string): string[] {
   ];
 }
 
+/** Every file under `dir`, as `/`-joined paths relative to it. */
+export function skillFiles(dir: string, under = ""): string[] {
+  return readdirSync(join(dir, under), { withFileTypes: true }).flatMap((e) => {
+    const path = under ? `${under}/${e.name}` : e.name;
+    return e.isDirectory() ? skillFiles(dir, path) : [path];
+  });
+}
+
 /**
  * Copy the shipped skill into `dir`.
  *
@@ -55,7 +64,7 @@ export function lineDiff(installed: string, shipped: string): string[] {
  * @returns what happened, and the differing lines when refused or replaced.
  */
 export function installSkill(dir: string, force: boolean, from = SHIPPED_SKILL): SkillInstall {
-  const files = readdirSync(from);
+  const files = skillFiles(from);
   const diff = files.flatMap((f) => {
     const there = join(dir, f);
     if (!existsSync(there)) return [];
@@ -66,8 +75,10 @@ export function installSkill(dir: string, force: boolean, from = SHIPPED_SKILL):
   const complete = files.every((f) => existsSync(join(dir, f)));
   if (diff.length && !force) return { status: "refused", dir, diff };
   if (!diff.length && complete) return { status: "unchanged", dir, diff };
-  mkdirSync(dir, { recursive: true });
-  for (const f of files) copyFileSync(join(from, f), join(dir, f));
+  for (const f of files) {
+    mkdirSync(dirname(join(dir, f)), { recursive: true });
+    copyFileSync(join(from, f), join(dir, f));
+  }
   return { status: fresh ? "installed" : "replaced", dir, diff };
 }
 

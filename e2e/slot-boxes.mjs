@@ -60,6 +60,7 @@ const within = (a, b) => ["x", "y", "width", "height"].every((k) => Math.abs(a[k
 check("the frame lies on the slot's own rect, within 1 px", !!frame && !!slotRect && within(frame, slotRect), `${JSON.stringify(frame)} vs ${JSON.stringify(slotRect)}`);
 
 const textBefore = await rectOf('main [data-slot="title"] .folio-text');
+await page.keyboard.down("Alt");
 await page.mouse.move(e.x + e.width / 4, e.y + 1);
 await page.mouse.down();
 await page.mouse.move(e.x + e.width / 4 + 50, e.y + 1 + 30, { steps: 6 });
@@ -67,6 +68,7 @@ await settle(page);
 const textEscaping = await rectOf('main [data-slot="title"] .folio-text');
 await page.keyboard.press("Escape");
 await page.mouse.up();
+await page.keyboard.up("Alt");
 await settle(page);
 const textCancelled = await rectOf('main [data-slot="title"] .folio-text');
 check("Escape during a drag cancels it: nothing written, the content back in place", !own("title").box && Math.abs(textEscaping.x - textBefore.x - 50) <= 2 && within(textCancelled, textBefore), `${JSON.stringify(own("title"))}, ${textBefore.x} -> ${textEscaping.x} -> ${textCancelled.x}`);

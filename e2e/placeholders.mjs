@@ -42,7 +42,7 @@ const fresh = await look();
 check("title shows its placeholder", fresh.empty && fresh.content === '"Title of the slide"', `content ${fresh.content}`);
 check("placeholder is faint, in the slot's font", fresh.opacity >= 0.35 && fresh.opacity <= 0.45 && fresh.sameFont, JSON.stringify(fresh));
 const figure = await page.locator('main [data-slot="fig:a"]').innerText();
-check("empty figure shows a prompt and its size", /Figure a/.test(figure) && /290\.9 x 239 pt/.test(figure), JSON.stringify(figure));
+check("empty figure shows a prompt and its size", /Figure a/.test(figure) && /272 x 280 pt/.test(figure), JSON.stringify(figure));
 const overflowing = await page.locator("main [data-overflow]").count();
 check("placeholders are not counted for overflow", overflowing === 0, `${overflowing} slots marked overflowing`);
 

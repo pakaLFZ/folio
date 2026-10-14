@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { installSkill, lineDiff, quickstartCommand, SHIPPED_SKILL, skillDir, skillHint } from "../src/skillcmd.js";
+import { installSkill, lineDiff, quickstartCommand, SHIPPED_SKILL, skillDir, skillFiles, skillHint } from "../src/skillcmd.js";
 
 const temp = () => mkdtempSync(join(tmpdir(), "folio-skill-"));
 
@@ -39,6 +39,7 @@ describe("folio skill", () => {
     expect(skillHint(ws, home)).toMatch(/folio skill install/);
     expect(installSkill(skillDir("project", ws, home), false).status).toBe("installed");
     expect(readFileSync(join(ws, ".claude/skills/folio/SKILL.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "SKILL.md"), "utf8"));
+    expect(readFileSync(join(ws, ".claude/skills/folio/references/quickstart.md"), "utf8")).toBe(readFileSync(join(SHIPPED_SKILL, "references/quickstart.md"), "utf8"));
     expect(installSkill(skillDir("project", ws, home), false).status).toBe("unchanged");
     expect(skillHint(ws, home)).toBeNull();
     expect(installSkill(skillDir("user", ws, home), false).dir).toBe(join(home, ".claude/skills/folio"));
@@ -57,6 +58,12 @@ describe("folio skill", () => {
     expect(readFileSync(file, "utf8")).toContain("My own heading");
     expect(installSkill(dir, true).status).toBe("replaced");
     expect(readFileSync(file, "utf8")).not.toContain("My own heading");
+  });
+  it("links only reference files it ships", () => {
+    const text = readFileSync(join(SHIPPED_SKILL, "SKILL.md"), "utf8");
+    const linked = [...text.matchAll(/\]\((references\/[^)]+)\)/g)].map((m) => m[1]!);
+    expect(linked.length).toBeGreaterThan(0);
+    expect(linked.filter((f) => !skillFiles(SHIPPED_SKILL).includes(f))).toEqual([]);
   });
   it("diffs by line", () => {
     expect(lineDiff("a\nb", "a\nb")).toEqual([]);

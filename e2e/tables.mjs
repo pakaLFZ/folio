@@ -39,6 +39,7 @@ writeFileSync(join(packDir, "pack.json"), JSON.stringify({
 }, null, 2));
 const style = lec.tables.default;
 const ROW = style.size * style.lineHeight + style.cellPad[0] + style.cellPad[2];
+const ROW_MINIMAL = MINIMAL.size * MINIMAL.lineHeight + MINIMAL.cellPad[0] + MINIMAL.cellPad[2];
 
 const deckDir = join(root, "decks/tables");
 mkdirSync(join(deckDir, "slides"), { recursive: true });
@@ -85,7 +86,7 @@ check("layout's table style by default", g3?.style === "default" && g3.header ==
 
 await page.goto(`${server.base}/${token}/?slide=s002&mode=view`, { waitUntil: "load" });
 const gm = await until(geometry);
-check("a slide's tableStyle switches to another named style, rows read from the file", gm?.style === "minimal" && gm.header === "rgba(0, 0, 0, 0)" && close(gm.table, 3 * ROW), JSON.stringify(gm));
+check("a slide's tableStyle switches to another named style, rows read from the file", gm?.style === "minimal" && gm.header === "rgba(0, 0, 0, 0)" && close(gm.table, 3 * ROW_MINIMAL), JSON.stringify(gm));
 
 const report = JSON.parse(await server.cliAsync(["check", "decks/tables", "--json"]));
 const codes = (slideId) => report.warnings.filter((w) => w.location.slide === slideId && w.source === "overflow").map((w) => w.code).sort().join(",");

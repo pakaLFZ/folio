@@ -23,17 +23,17 @@ describe("the version rule", () => {
       j.backgrounds.navy = { fill: "#000080", ink: "#FFFFFF" };
     });
     expect(namesRemoved(before, after, hooks, hooks)).toEqual([]);
-    expect(nextVersion(before, after, hooks, hooks)).toBe(2);
+    expect(nextVersion(before, after, hooks, hooks)).toBe(1);
   });
   it("bumps it when a layout is removed or renamed", () => {
     const removed = pack((j) => delete j.layouts.blank);
     expect(namesRemoved(before, removed, hooks, hooks)).toEqual(["layout:blank"]);
-    expect(nextVersion(before, removed, hooks, hooks)).toBe(3);
+    expect(nextVersion(before, removed, hooks, hooks)).toBe(2);
     const renamed = pack((j) => {
       j.layouts.empty = j.layouts.blank;
       delete j.layouts.blank;
     });
-    expect(nextVersion(before, renamed, hooks, hooks)).toBe(3);
+    expect(nextVersion(before, renamed, hooks, hooks)).toBe(2);
   });
   it("bumps it when a slot changes role, or a background, table style or hook goes", () => {
     expect(namesRemoved(before, pack((j) => (j.layouts["note-figure"].slots.note.role = "body")), hooks, hooks)).toEqual(["slot:note-figure/note=note"]);

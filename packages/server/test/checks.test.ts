@@ -7,12 +7,12 @@ import { FolioApp } from "../src/app.js";
 import { loadConfig } from "../src/config.js";
 import { fileURLToPath } from "node:url";
 
-const nusIcl = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
+const lecternDir = fileURLToPath(new URL("../../../templates/lectern", import.meta.url));
 
 /** A workspace with lectern and a deck whose order lists only one of its two slide files. */
 function workspace(): string {
   const root = mkdtempSync(join(tmpdir(), "folio-order-"));
-  cpSync(nusIcl, join(root, "templates/lectern"), { recursive: true });
+  cpSync(lecternDir, join(root, "templates/lectern"), { recursive: true });
   writeFileSync(join(root, "folio.toml"), '[workspace]\ndecks = "decks"\ntemplates = "templates"\n');
   const deck = join(root, "decks/talk");
   mkdirSync(join(deck, "slides"), { recursive: true });

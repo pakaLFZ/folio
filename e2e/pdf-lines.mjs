@@ -37,7 +37,7 @@ const live = await page.locator('main [data-slot="note"] .folio-text').evaluate(
 await browser.close();
 await pdfDone;
 await server.stop();
-const pdf = execFileSync("pdftotext", ["-f", "2", "-l", "2", "-x", "25", "-y", "109", "-W", "441", "-H", "395", "-layout", out, "-"], { encoding: "utf8" }).split("\n").map((l) => l.replace(/\s+/g, " ").trim()).filter(Boolean);
+const pdf = execFileSync("pdftotext", ["-f", "2", "-l", "2", "-x", "48", "-y", "118", "-W", "384", "-H", "370", "-layout", out, "-"], { encoding: "utf8" }).split("\n").map((l) => l.replace(/\s+/g, " ").trim()).filter(Boolean);
 const n = Math.min(pdf.length, live.length);
 const same = pdf.slice(0, n).every((l, i) => l === live[i]);
 const ok = same && n >= 15;

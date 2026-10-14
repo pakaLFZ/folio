@@ -78,6 +78,6 @@ check("an installed pack with other files is refused, naming them", r.code === 2
 r = folio(["deck", "import", zip, "--into", fresh, "--name", "again", "--pack-as", "lectern-x"], fresh);
 const pinned = existsSync(join(fresh, "decks/again/deck.json")) ? JSON.parse(readFileSync(join(fresh, "decks/again/deck.json"), "utf8")) : {};
 const listed = folio(["slide", "list", "decks/again"], fresh);
-check("--pack-as installs the pack under another name, re-pins the deck and gives it a fresh id", r.code === 0 && pinned.template === "lectern-x@2" && pinned.id !== manifest.deck.id && listed.code === 0 && listed.out.includes("plot-table"), `${pinned.template}, id ${pinned.id}; ${r.out.trim().split("\n").filter((l) => /id/.test(l)).join(" ")}`);
+check("--pack-as installs the pack under another name, re-pins the deck and gives it a fresh id", r.code === 0 && pinned.template === "lectern-x@1" && pinned.id !== manifest.deck.id && listed.code === 0 && listed.out.includes("plot-table"), `${pinned.template}, id ${pinned.id}; ${r.out.trim().split("\n").filter((l) => /id/.test(l)).join(" ")}`);
 
 process.exit(results.every(Boolean) ? 0 : 1);

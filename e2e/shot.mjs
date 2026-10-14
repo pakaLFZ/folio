@@ -12,6 +12,28 @@ import { join } from "node:path";
 import { bin, workspace } from "./lib/server.mjs";
 
 const root = workspace({ decks: ["example"] });
+// lectern ships an empty Use/Never table; this check needs three Never words that land on s002's note
+// ("channel", "turning", "pocket" each appear there as whole words) so its workspace copy gets a small fixture bank.
+writeFileSync(join(root, "templates/lectern/vocabulary.md"), `# Vocabulary bank
+
+## Words to use, and their replacements
+
+| Use | Never | Since |
+|---|---|---|
+| the SC the H passes through | channel | 2026-10-07 |
+| rotation (about an axis) | turning | 2026-10-08 |
+| the narrow site | pocket | 2026-10-10 |
+
+## Phrasing
+
+- A title names the page's subject.
+
+## Content
+
+- A page holding one item centres it.
+
+## Status (log of the user's edits)
+`);
 const deckDir = join(root, "decks/example");
 const shots = join(deckDir, ".shots");
 const results = [];
