@@ -21,7 +21,8 @@ try {
     await page.mouse.move(...point(b), { steps: 8 });
     await page.mouse.up();
   };
-  const count = () => page.locator("main .folio-slide svg polyline[stroke], main .folio-slide svg rect[stroke], main .folio-slide svg line[stroke]").count();
+  const sketch = () => page.locator('[data-sketch-input]').locator("xpath=..");
+  const count = () => sketch().locator("svg polyline[stroke], svg rect[stroke], svg line[stroke]").count();
   const iconCursor = async () => (await page.locator("main .folio-slide [data-sketch-input]").evaluate((svg) => getComputedStyle(svg).cursor)).includes("url(");
   check((await radio(/^Edit text/).locator("svg.lucide-mouse-pointer").count()) === 1, "Cursor button uses MousePointer");
   check((await radio(/^Region/).locator("svg.lucide-square-mouse-pointer").count()) === 1, "Select button uses SquareMousePointer");
@@ -58,6 +59,24 @@ try {
   const cursors = await page.locator("main .folio-slide").evaluate((slide) => ({ slide: getComputedStyle(slide).cursor, text: getComputedStyle(slide.querySelector('[contenteditable="true"]')).cursor }));
   check(!cursors.slide.includes("url(") && (cursors.text === "text" || cursors.text === "auto"), `Cursor tool keeps native pointer/text behavior (${JSON.stringify(cursors)})`);
   check(await bar.isVisible(), "Cursor tool keeps the draft input available");
+
+  // Switching slides must not lose, or silently merge into, a mark drawn before the switch
+  // (spec/comments/region-comments.md: "a draft mark persists until the user clears it").
+  await radio(/^Pen/).click();
+  const beforeSwitch = await count();
+  await page.keyboard.press("PageDown");
+  await page.waitForFunction(() => new URLSearchParams(location.search).get("slide") === "s003");
+  await page.waitForTimeout(300);
+  const onS003Before = await count();
+  check(onS003Before === 0, `switching to another slide shows none of the first slide's marks (got ${onS003Before}, had ${beforeSwitch})`);
+  await drag([120, 150], [300, 150]);
+  const onS003After = await count();
+  check(onS003After === onS003Before + 1, `a mark drawn on the new slide shows on it at once (${onS003Before} -> ${onS003After})`);
+  await page.keyboard.press("PageUp");
+  await page.waitForFunction(() => new URLSearchParams(location.search).get("slide") === "s001");
+  await page.waitForTimeout(300);
+  const onS001After = await count();
+  check(onS001After === beforeSwitch, `switching back restores the first slide's own marks, unchanged by the one drawn elsewhere (${beforeSwitch} -> ${onS001After})`);
 } finally {
   await browser.close();
   await server.stop();

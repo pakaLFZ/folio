@@ -199,6 +199,31 @@
   dashed border itself is hidden (the region screenshot). *(Superseded
   2026-10-14: a fixed two-tone white-under-ink stroke, same on the whole
   border regardless of what was under it.)*
+- **Every draft mark auto-contrasts too**: "these shapes also share the
+  dynamic background color constrat thing" *(user, 2026-10-14)*. The pen,
+  rectangle and arrow (its shaft and head alike) take the same white stroke
+  with `mix-blend-mode: difference` as the region border, so a pen stroke or
+  a rectangle drawn over a black title slide stays visible exactly as one
+  drawn over a white slide (`MarkShape` in `marks.tsx`). *(Superseded
+  2026-10-14: a fixed near-black ink stroke, `MARK_INK`, which a difference
+  blend cannot invert — difference against a near-black backdrop returns
+  nearly the same colour, so the mark all but disappeared on a dark slide,
+  the opposite of what the blend is for.)* The eraser draws no live preview
+  stroke of its own (only its cursor icon), so there is nothing there to
+  recolour.
+- **A draft belongs to one slide, and switching slides never bleeds marks
+  across that boundary**: "the drawing disappears on slide for some reason"
+  *(user, 2026-10-14)*. Drawing after a slide switch used to write straight
+  into the draft left on the slide behind (its `slide` field never moved
+  with the view), so the new mark showed nowhere and the earlier slide
+  silently gained marks it was never drawn on. Switching slides now matches
+  the open draft to the one the current slide owns: leaving a slide flushes
+  its draft to disk at once (the 1 s autosave may not have fired yet) and
+  arriving at a slide loads that slide's own saved draft back, so a pen
+  stroke, rectangle or arrow survives every tool switch, re-render and trip
+  to another slide and back; it is only ever lost by Undo, Clear, the eraser,
+  Esc (discards the whole draft) or sending the comment (closes the draft,
+  keeping the marks on the sent comment).
 - **Nothing on a slide is ever natively dragged by the browser**: no image,
   link or text drag ghost starts from a press on the slide, whatever comment
   tool is chosen, in the single-slide scene, the column view below 100% zoom,
@@ -349,3 +374,8 @@ In progress, Review, Held, Done).
 figure fires no `dragstart` on the page and draws a region box; a single
 click on a figure sets the region to that figure slot's own box and opens the
 bubble; both hold at 50% zoom in the column view.
+`e2e/comment-tools.mjs`: the sketch tools do not open the composer; Region
+does; the eraser removes only touched draft marks; switching slides (PageDown
+/ PageUp) shows none of the slide left behind's marks, a mark drawn on the
+new slide shows at once, and switching back restores the first slide's own
+marks unchanged by the one drawn elsewhere.
