@@ -1,9 +1,12 @@
 /**
  * The floating sketch toolbar at the foot of the scene in Edit, centred
  * between the rail and the panel (the `--scene-*` insets the editor sets):
- * the Cursor tool (text editing, the default), then the comment tools region, pen,
- * rectangle and arrow, undo and the eraser; then, after a divider, the
- * editor's Shape tool (slide content, not a comment mark), when given.
+ * the Cursor tool (text editing, the default), then a divider, then one
+ * unbroken draft tools group (region, pen, rectangle, arrow, undo, eraser),
+ * then, after another divider, the editor's Shape and Text tools (slide
+ * content, not a comment mark), when given. While a draft tool other than
+ * Undo is current, a note above the toolbar says the marks it draws are
+ * drafts for comments, not slide edits.
  */
 import { MousePointer, MoveUpRight, Pen, Square, SquareMousePointer, Undo2, Eraser } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
@@ -13,6 +16,8 @@ import { Tip } from "../ui/tooltip";
 import type { DeckState } from "../editor/deckState";
 import { TOOL_KEYS, useToolKeys } from "./toolKeys";
 import type { CommentsModel, Tool } from "./useComments";
+
+const DRAFT_TOOLS = new Set<Tool>(["region", "pen", "rect", "arrow", "eraser"]);
 
 /** The editor's Shape tool, as the toolbar carries it. */
 export interface ShapeToolSlot {
@@ -36,12 +41,17 @@ export function CommentToolbar({ model, state, shape }: { model: CommentsModel; 
   const tool = shape?.active ? ("" as Tool) : model.tool;
   const setTool = (t: Tool) => (shape?.drop(), model.setTool(t));
   const undo = () => model.editDraft((d) => (d.marks.length ? { ...d, marks: d.marks.slice(0, -1) } : { ...d, region: null }));
+  const draftNote = state.mode === "edit" && DRAFT_TOOLS.has(tool);
   return (
     <div data-chrome="sketch-toolbar" className="pointer-events-none fixed bottom-[calc(var(--scene-bottom,0px)+var(--panel-inset)+var(--glass-edge-w)+var(--tabbar-margin)-2px)] left-[var(--scene-left,0px)] right-[var(--scene-right,0px)] z-[20] flex flex-col items-center gap-2 px-3">
+      {draftNote ? (
+        <div className="max-w-72 rounded-card border border-line bg-surface px-2.5 py-1.5 text-center text-[12px] leading-snug text-ink shadow-[var(--glass-lift)]">
+          Draft marks for comments: they do not edit the slide.
+        </div>
+      ) : null}
       {state.mode === "edit" ? (
         <div role="toolbar" aria-label="Tools" className="glass pointer-events-auto flex items-center gap-0.5 rounded-control bg-sunken p-0.5">
           <ToolChoice tool={tool} setTool={setTool} />
-          <span aria-hidden className="mx-0.5 h-4 w-px bg-line" />
           <Tip label="Undo the last mark"><Button size="icon" className="rounded-chip! text-ink-muted hover:text-ink" aria-label="Undo" disabled={!draft || (!draft.marks.length && !draft.region)} onClick={undo}><Undo2 /></Button></Tip>
           <Segmented<Tool> label="Eraser tool" className="bg-transparent p-0" itemClassName="size-[var(--corner-hit)] flex-none px-0" value={tool} onChange={setTool} options={[{ value: "eraser", label: <Eraser />, title: `Eraser: touch a mark to remove it (${TOOL_KEYS.eraser})` }]} />
           {shape ? (
@@ -56,7 +66,7 @@ export function CommentToolbar({ model, state, shape }: { model: CommentsModel; 
   );
 }
 
-/** The Cursor tool, a divider, then the four comment tools: one choice across two groups. */
+/** The Cursor tool, a divider, then the four selectable draft tools (region, pen, rectangle, arrow): one choice across two groups, continuing into Undo and Eraser with no divider between. */
 function ToolChoice({ tool, setTool }: { tool: Tool; setTool: (t: Tool) => void }) {
   return (
     <>
