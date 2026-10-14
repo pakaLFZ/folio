@@ -5,7 +5,7 @@
  */
 import type { Server, ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
-import { FolioApp, createFolioServer, findWorkspace, loadConfig, sendJson, sendProblem } from "@folio/server";
+import { FolioApp, createFolioServer, findWorkspace, loadConfig, readBody, sendJson, sendProblem } from "@folio/server";
 import { attachServices, type Services } from "./services.js";
 
 /** What the holder tells the app to serve, passed in `FOLIO_SERVE_APP`. */
@@ -15,10 +15,13 @@ export interface AppSpec {
   prefix: string;
 }
 
+/** The app asking the holder about the port VS Code opens (`spec/live/vscode-open.md`). */
+type OpenPortOp = { op: "fresh" } | { op: "wait"; port: number; after: number; ms: number };
+export type OpenPortAsk = { type: "open-port"; id: number } & OpenPortOp;
 /** Holder to app. */
-export type HolderMessage = { type: "retire"; pid?: number; forwardPort?: number } | { type: "restart-failed"; error: string } | { type: "forward-port"; port: number };
+export type HolderMessage = { type: "retire"; pid?: number } | { type: "restart-failed"; error: string } | { type: "open-port"; id: number; value: unknown };
 /** App to holder. */
-export type AppMessage = { type: "ready"; port: number; lines: string[] } | { type: "restart" } | { type: "forward-port" };
+export type AppMessage = { type: "ready"; port: number; lines: string[] } | { type: "restart" } | OpenPortAsk;
 
 const DRAIN_MS = 5000;
 
@@ -30,8 +33,8 @@ function deckLines(app: FolioApp): string[] {
 }
 
 /** Stop serving: answer pending restarts, stop the queue and watchers, let open requests finish, exit. */
-async function retire(app: FolioApp, services: Services, server: Server, pending: ServerResponse[], replacement?: number, forwardPort?: number): Promise<never> {
-  for (const res of pending.splice(0)) sendJson(res, 200, { pid: replacement, previous: process.pid, forwardPort });
+async function retire(app: FolioApp, services: Services, server: Server, pending: ServerResponse[], replacement?: number): Promise<never> {
+  for (const res of pending.splice(0)) sendJson(res, 200, { pid: replacement, previous: process.pid });
   const drained = new Promise((resolve) => server.close(resolve));
   server.closeIdleConnections();
   await services.close();
@@ -59,7 +62,13 @@ export async function serveApp(spec: AppSpec): Promise<number> {
   app.watchDecks();
   const services = attachServices(app, true);
   const pending: ServerResponse[] = [];
-  const forwardAsks: ServerResponse[] = [];
+  const asks = new Map<number, ServerResponse>();
+  let nextAsk = 0;
+  const askHolder = (res: ServerResponse, ask: OpenPortOp) => {
+    const id = (nextAsk += 1);
+    asks.set(id, res);
+    send({ type: "open-port", id, ...ask });
+  };
   const server = createFolioServer(app, {
     prefix: spec.prefix,
     extraRoutes: (router) => {
@@ -68,20 +77,24 @@ export async function serveApp(spec: AppSpec): Promise<number> {
         pending.push(res);
         send({ type: "restart" });
       });
-      router.on("POST", "/api/forward-port", (_req, res) => {
-        forwardAsks.push(res);
-        send({ type: "forward-port" });
+      router.on("POST", "/api/open-port", (_req, res) => askHolder(res, { op: "fresh" }));
+      router.on("POST", "/api/open-port/wait", async (req, res) => {
+        const { port, after, ms } = await readBody<{ port: number; after: number; ms: number }>(req, 1024);
+        askHolder(res, { op: "wait", port: Number(port), after: Number(after), ms: Math.min(Number(ms), 30_000) });
       });
     },
   });
   const port = await listenPrivately(server);
   services.setBase(`http://127.0.0.1:${port}${spec.prefix}`);
   let leaving = false;
-  const leave = (replacement?: number, forwardPort?: number) => void (leaving || ((leaving = true), retire(app, services, server, pending, replacement, forwardPort)));
+  const leave = (replacement?: number) => void (leaving || ((leaving = true), retire(app, services, server, pending, replacement)));
   process.on("message", (message: HolderMessage) => {
-    if (message.type === "retire") leave(message.pid, message.forwardPort);
-    else if (message.type === "forward-port") for (const res of forwardAsks.splice(0)) sendJson(res, 200, { port: message.port });
-    else for (const res of pending.splice(0)) sendProblem(res, 500, "Restart failed", message.error);
+    if (message.type === "retire") leave(message.pid);
+    else if (message.type === "open-port") {
+      const res = asks.get(message.id);
+      asks.delete(message.id);
+      if (res) sendJson(res, 200, message.value);
+    } else for (const res of pending.splice(0)) sendProblem(res, 500, "Restart failed", message.error);
   });
   process.on("disconnect", () => leave());
   process.on("SIGINT", () => {});

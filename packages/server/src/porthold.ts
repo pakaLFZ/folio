@@ -14,9 +14,21 @@ export interface PortHolder {
   hosts: string[];
   /** Pass new requests to the app on this loopback port; null holds them. */
   setTarget(port: number | null): void;
-  /** Add a fresh loopback address for a new VS Code tunnel. */
+  /** Add a loopback port no VS Code forward has seen, passing to the same app. */
   freshForwardPort(): Promise<number>;
+  /** How many browser page loads arrived on this port. */
+  pageLoads(port: number): number;
+  /** Whether a page load beyond the first `after` arrives on this port within `ms`. */
+  pageLoaded(port: number, after: number, ms: number): Promise<boolean>;
   close(): Promise<void>;
+}
+
+/** A browser loading a page, not a script or the CLI asking the API. */
+export function isPageLoad(req: IncomingMessage): boolean {
+  if (req.method !== "GET") return false;
+  const dest = req.headers["sec-fetch-dest"];
+  if (dest) return dest === "document" || dest === "iframe";
+  return /text\/html/.test(req.headers.accept ?? "");
 }
 
 interface Target {
@@ -79,8 +91,21 @@ async function bindPort(make: () => Server, port: number, host: string): Promise
 export async function holdPort(host: string, first: number): Promise<PortHolder> {
   let target: Target | null = null;
   const waiting: Array<() => void> = [];
+  const loads = new Map<number, number>();
+  const loadWaiters = new Set<{ port: number; after: number; resolve: (loaded: boolean) => void }>();
+  const countLoad = (req: IncomingMessage) => {
+    if (!isPageLoad(req)) return;
+    const port = req.socket.localPort!;
+    const count = (loads.get(port) ?? 0) + 1;
+    loads.set(port, count);
+    for (const waiter of loadWaiters) if (waiter.port === port && count > waiter.after) (loadWaiters.delete(waiter), waiter.resolve(true));
+  };
   const make = () => {
-    const server = createServer((req, res) => (target ? forward(req, res, target) : waiting.push(() => forward(req, res, target!))));
+    const server = createServer((req, res) => {
+      countLoad(req);
+      if (target) forward(req, res, target);
+      else waiting.push(() => forward(req, res, target!));
+    });
     server.keepAliveTimeout = 65_000;
     return server;
   };
@@ -102,6 +127,14 @@ export async function holdPort(host: string, first: number): Promise<PortHolder>
         servers.push(bridge);
         return (bridge.address() as { port: number }).port;
       },
+      pageLoads: (port) => loads.get(port) ?? 0,
+      pageLoaded: (port, after, ms) =>
+        new Promise((resolve) => {
+          if ((loads.get(port) ?? 0) > after) return resolve(true);
+          const waiter = { port, after, resolve };
+          loadWaiters.add(waiter);
+          setTimeout(() => loadWaiters.delete(waiter) && resolve(false), ms);
+        }),
       close: async () => {
         const closing = servers.map(closeServer);
         for (const server of servers) server.closeAllConnections();

@@ -49,17 +49,39 @@
     in a browser. If VS Code's Ports panel lists port N but the page does not
     load, remove that forward and forward port N again.` (exit 1).
 - **A restart re-requests the forward.** `folio restart` makes the same
-  request for `/` once the new app answers, every time, without a flag. The
-  holder also binds a fresh loopback port that passes to the same app; restart
-  requests this fresh port because VS Code reuses a forward already registered
-  for the original port, even when it is stale. Earlier ports remain live for
-  existing tabs. The restarted line is followed by the request result. A
-  restart is only ever asked for on a server the user is looking at, so
-  this is the one automatic open; plain `folio serve` still opens nothing.
+  checked open (below) for `/` once the new app answers, every time, without
+  a flag. A restart is only ever asked for on a server the user is looking
+  at, so this is one automatic open; plain `folio serve` still opens nothing.
   *(design choice, 2026-10-14)*
-- `folio` alone, in an SSH session, makes the same request on a fresh
-  forward port too (`home.md`): `POST /api/forward-port` asks the holder for
-  one without restarting the app.
+- **Every open is held to its word** *(user, 2026-10-14: "learn cavitas'
+  open in browser logic, as there is a detect and respond logic that can save
+  a constantly loading page")*. VS Code's 200 means it forwarded the port and
+  handed the address over, not that a browser loaded anything; a forward left
+  from an earlier server accepts and relays nothing, and the tab loads
+  forever. So `folio open`, `folio restart`, `serve --open` and `folio` alone:
+  1. ask the server for a fresh loopback port, one no VS Code forward has
+     seen, that passes to the same app (`POST /api/open-port`). Every open
+     takes a new one, never the held port: the forward VS Code holds for a
+     port it opened before is usually dead *(user, 2026-10-14: "always retry
+     on a fresh port ... as usually the old one is dead")*;
+  2. ask VS Code to open the page there and print `asked VS Code to open
+     URL; waiting for the page to load`. No VS Code answers: the
+     not-opened line names the held port, the one to forward by hand;
+  3. wait up to 6 s for a browser page load on that port (a GET with
+     `Sec-Fetch-Dest: document` or `iframe`, or without that header one that
+     accepts `text/html`; the CLI's own API calls never count). Loaded: `the
+     page loaded in your browser`;
+  4. otherwise take a second fresh port, ask VS Code again and wait 4 s:
+     `port N reached nothing, so the page moved to URL, where it loaded`;
+  5. otherwise: `VS Code said it opened the page on ports N and M, and no
+     browser loaded it. Forward it yourself:` followed by the `ssh -L` line
+     and the `localhost` address (exit 1 for `folio open`).
+  The earlier ports stay live for tabs already open on them. A server too
+  old to answer `/api/open-port` gets the unchecked open on its held port
+  and its line.
+  The waits follow cavitas (`cavitas/viewer/reach.py`): generous, because
+  calling a live forward dead moves the page from under a browser still
+  starting.
 - `folio serve --open` makes the same request once the app is listening, for
   `/`, and prints the same line. It runs after the address lines are printed
   and is never awaited by the start: no VS Code means one printed line, not a
@@ -125,4 +147,6 @@ the printed lines), `packages/cli/src/serve.ts` (`--open`).
 gets the exact JSON body; a dead socket file gives no open; an inherited dead
 socket with a live one in the runtime folder reaches the live one; a refusal
 stops the walk. `e2e/held-port.mjs` runs `folio open` against a fake socket
-with a dead inherited one.
+with a dead inherited one. `packages/cli/test/opencheck.test.ts`: each open goes to a new fresh port,
+never the held one; a first port that loads nothing moves to a second; no
+load on either gets the `ssh -L` line.

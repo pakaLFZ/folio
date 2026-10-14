@@ -27,12 +27,9 @@
      20 s; on failure it prints the log's last lines);
   3. opens the deck list, `/`: on a local machine in the system browser
      (`open`, `xdg-open` with a display, `start` on Windows); in an SSH
-     session through VS Code's port forward (`vscode-open.md`), always on a
-     fresh loopback port the holder binds for this open
-     (`POST /api/forward-port`, as `folio restart` does), because VS Code
-     reuses a stale forward it holds for the server's own port; a server
-     without that route is opened on its own port; otherwise it prints the
-     address;
+     session through VS Code's port forward, checked for a page load and
+     moved to a fresh port when the forward reaches nothing
+     (`vscode-open.md`); otherwise it prints the address;
   4. returns to the prompt with the server left running, and says
      `folio stop` stops it.
 - When standard output is not a terminal (an agent's shell, a pipe), `folio`
@@ -54,5 +51,6 @@
 ## Checks
 
 `packages/cli/test/homecmd.test.ts`: the default workspace is made once with
-`lectern` and port 4320; a non-terminal `folio` prints the usage; the fresh
-forward port differs from the server's and answers the page.
+`lectern` and port 4320; a non-terminal `folio` prints the usage.
+`packages/cli/test/opencheck.test.ts`: the checked open stays, moves, or
+says how to forward by hand.

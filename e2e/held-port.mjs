@@ -1,6 +1,7 @@
 // The held port (spec/live/server-and-addresses.md) and `folio open` (spec/live/vscode-open.md): requests loop on
 // fresh and kept-alive connections while `folio restart` swaps the app behind the port, and none is refused or
-// dropped; http://[::1]:N/ answers; `folio open` reaches a fake VS Code socket past a dead inherited one.
+// dropped; http://[::1]:N/ answers; `folio open` reaches a fake VS Code socket past a dead inherited one and sees the
+// page load.
 import { execFile } from "node:child_process";
 import { linkSync, mkdtempSync, readFileSync, rmSync, utimesSync } from "node:fs";
 import { createServer, get } from "node:http";
@@ -67,12 +68,17 @@ else {
   check("http://[::1]:N/ answers 200", six.status === 200 && after.hosts.includes("::1"), `status ${six.status ?? six.error}, hosts ${after.hosts}`);
 }
 
-/** A fake VS Code CLI socket keeping each JSON body it receives. */
+/** A fake VS Code CLI socket keeping each JSON body it receives, whose browser then loads the page as a navigation. */
 const fakeEditor = (path) => new Promise((resolve) => {
   const bodies = [];
   const editor = createServer((req, res) => {
     let text = "";
-    req.on("data", (c) => (text += c)).on("end", () => (bodies.push(JSON.parse(text)), res.writeHead(200).end("{}")));
+    req.on("data", (c) => (text += c)).on("end", () => {
+      const body = JSON.parse(text);
+      bodies.push(body);
+      res.writeHead(200).end("{}");
+      fetch(body.uris[0], { headers: { "sec-fetch-dest": "document" } }).catch(() => {});
+    });
   });
   editor.listen(path, () => resolve({ editor, bodies }));
 });
@@ -87,18 +93,17 @@ else {
   linkSync(join(dir, "dead.sock"), join(dir, "vscode-ipc-dead.sock"));
   await new Promise((resolve) => gone.close(resolve));
   utimesSync(join(dir, "vscode-ipc-live.sock"), new Date(), new Date(Date.now() - 60_000));
-  const url = `http://127.0.0.1:${before.port}/${server.token("example")}/`;
   const opened = await folioOpen({ VSCODE_IPC_HOOK_CLI: join(dir, "vscode-ipc-dead.sock"), XDG_RUNTIME_DIR: dir });
-  check("folio open reaches the live socket past a dead inherited one", opened.code === 0 && opened.out.includes(`VS Code accepted the forward and open request for ${url}`) && JSON.stringify(bodies) === JSON.stringify([{ type: "openExternal", uris: [url] }]), `exit ${opened.code}: ${opened.out.trim()}; bodies ${JSON.stringify(bodies)}`);
+  const openedUrl = bodies[0]?.uris?.[0] ?? "";
+  const url = `http://127.0.0.1:${before.port}/${server.token("example")}/`;
+  check("folio open reaches the live socket past a dead inherited one, on a fresh port", opened.code === 0 && bodies.length === 1 && openedUrl === url.replace(`:${before.port}/`, `:${new URL(openedUrl).port}/`) && new URL(openedUrl).port !== String(before.port) && opened.out.includes(`asked VS Code to open ${openedUrl}; waiting for the page to load\nthe page loaded in your browser`), `exit ${opened.code}: ${opened.out.trim()}; bodies ${JSON.stringify(bodies)}`);
   const none = await folioOpen({ VSCODE_IPC_HOOK_CLI: "", XDG_RUNTIME_DIR: join(dir, "missing") });
   check("with no VS Code, folio open names the manual step", none.code === 1 && none.out.includes(`open ${url} in a browser`) && none.out.includes("remove that forward and forward port"), `exit ${none.code}: ${none.out.trim()}`);
   const editorEnv = { VSCODE_IPC_HOOK_CLI: join(dir, "vscode-ipc-dead.sock"), XDG_RUNTIME_DIR: dir };
   for (let run = 1; run <= 2; run += 1) {
     const reply = await folioRestart(editorEnv);
     const requested = bodies.at(-1)?.uris?.[0];
-    const freshPort = requested && Number(new URL(requested).port);
-    const answer = requested && await fetch(requested).catch(() => null);
-    check(`restart ${run} requests a fresh working VS Code port`, reply.code === 0 && reply.out.includes(`the port stayed open\nVS Code accepted the forward and open request for ${requested}`) && freshPort !== before.port && freshPort !== Number(new URL(bodies.at(-2)?.uris?.[0] ?? url).port) && answer?.status === 200, `exit ${reply.code}: ${reply.out.trim()}; request ${requested}; status ${answer?.status}`);
+    check(`restart ${run} opens a fresh port and sees the page load`, reply.code === 0 && new URL(requested).port !== String(before.port) && new URL(requested).port !== new URL(bodies.at(-2).uris[0]).port && reply.out.includes(`the port stayed open\nasked VS Code to open ${requested}; waiting for the page to load\nthe page loaded in your browser`), `exit ${reply.code}: ${reply.out.trim()}; request ${requested}`);
   }
   await new Promise((resolve) => editor.close(resolve));
   rmSync(dir, { recursive: true, force: true });

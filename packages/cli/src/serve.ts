@@ -9,8 +9,8 @@ import { parseArgs } from "node:util";
 import { join } from "node:path";
 import { atomicWrite, findWorkspace, formatJson, holdPort, loadConfig, type PortHolder } from "@folio/server";
 import { warnIfStale } from "./headless.js";
-import { openAndSay, restartedLine } from "./opencmd.js";
-import { serveApp, type AppMessage, type AppSpec, type HolderMessage } from "./serveapp.js";
+import { openChecked, restartedLine } from "./opencmd.js";
+import { serveApp, type AppMessage, type AppSpec, type HolderMessage, type OpenPortAsk } from "./serveapp.js";
 import { skillHint } from "./skillcmd.js";
 
 interface Launched {
@@ -57,10 +57,17 @@ function supervise(holder: PortHolder, spec: AppSpec, first: Launched, record: (
   let current = first;
   let restarting = false;
   let stopping = false;
+  const answer = async (launched: Launched, ask: OpenPortAsk) => {
+    const value =
+      ask.op === "wait"
+        ? { loaded: await holder.pageLoaded(ask.port, ask.after, ask.ms) }
+        : await holder.freshForwardPort().then((port) => ({ port, loads: holder.pageLoads(port) }), (error: Error) => ({ error: error.message }));
+    tell(launched, { type: "open-port", id: ask.id, value });
+  };
   const watch = (launched: Launched) => {
     launched.child.on("message", (message: AppMessage) => {
       if (message.type === "restart") void restart();
-      if (message.type === "forward-port") void forwardPort().then((port) => tell(launched, { type: "forward-port", port }));
+      if (message.type === "open-port") void answer(launched, message);
     });
     launched.child.on("exit", (code) => {
       if (launched !== current || stopping) return;
@@ -68,11 +75,6 @@ function supervise(holder: PortHolder, spec: AppSpec, first: Launched, record: (
       stop(code ?? 1);
     });
   };
-  const forwardPort = () =>
-    holder.freshForwardPort().catch((error: Error) => {
-      process.stderr.write(`folio: could not bind a fresh VS Code forward port: ${error.message}\n`);
-      return holder.port;
-    });
   const restart = async () => {
     if (restarting) return;
     restarting = true;
@@ -83,7 +85,7 @@ function supervise(holder: PortHolder, spec: AppSpec, first: Launched, record: (
       watch(next);
       holder.setTarget(next.port);
       record(next);
-      tell(old, { type: "retire", pid: next.child.pid, forwardPort: await forwardPort() });
+      tell(old, { type: "retire", pid: next.child.pid });
       process.stdout.write(restartedLine(holder.port, old.child.pid, next.child.pid));
     } catch (error) {
       process.stderr.write(`folio: restart failed, the old app keeps serving: ${(error as Error).message}\n`);
@@ -135,7 +137,7 @@ export async function serveCommand(args: string[]): Promise<number> {
   for (const line of first.lines) process.stdout.write(`${line}\n`);
   const hint = skillHint(config.root);
   if (hint) process.stdout.write(`${hint}\n`);
-  if (values.open) void openAndSay(`http://127.0.0.1:${holder.port}${prefix}/`);
+  if (values.open) void openChecked(`http://127.0.0.1:${holder.port}${prefix}`);
   else process.stdout.write("  folio open <deck> asks VS Code to forward the port and open the deck\n");
   return new Promise(() => {});
 }

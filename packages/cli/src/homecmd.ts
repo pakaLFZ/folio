@@ -10,7 +10,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { findWorkspace, loadConfig, readJson } from "@folio/server";
-import { openAndSay } from "./opencmd.js";
+import { openChecked } from "./opencmd.js";
 import { findServer } from "./queuecmds.js";
 
 const SHIPPED_PACK = fileURLToPath(new URL("../../../templates/lectern/", import.meta.url));
@@ -63,22 +63,13 @@ export function browserCommand(platform = process.platform, env = process.env): 
   return spawnSync("xdg-open", ["--version"], { stdio: "ignore" }).error ? null : ["xdg-open"];
 }
 
-/** A loopback port no VS Code forward has seen, passing to the same server; the server's own port when it cannot give one. */
-export async function freshForwardUrl(base: string): Promise<string> {
-  const res = await fetch(`${base}/api/forward-port`, { method: "POST", signal: AbortSignal.timeout(5000) }).catch(() => null);
-  const port = res?.ok ? ((await res.json()) as { port?: number }).port : undefined;
-  const url = new URL(`${base}/`);
-  if (port) url.port = String(port);
-  return url.href;
-}
-
-/** Open the deck list in the local browser, else through a fresh VS Code forward, else print it. */
+/** Open the deck list in the local browser, else through VS Code's forward, checked, else print it. */
 async function openHome(base: string): Promise<void> {
   const browser = browserCommand();
   if (browser) {
     spawn(browser[0]!, [...browser.slice(1), `${base}/`], { detached: true, stdio: "ignore", windowsHide: true }).unref();
     process.stdout.write(`opened ${base}/\n`);
-  } else if (process.env.SSH_CONNECTION || process.env.SSH_TTY) await openAndSay(await freshForwardUrl(base));
+  } else if (process.env.SSH_CONNECTION || process.env.SSH_TTY) await openChecked(base);
   else process.stdout.write(`open ${base}/ in a browser\n`);
 }
 
