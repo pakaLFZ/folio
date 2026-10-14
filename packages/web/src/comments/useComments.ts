@@ -86,8 +86,13 @@ export function useComments(store: DeckStore): CommentsModel {
       store.notify("Comment sent; agents see it in folio status and folio comments");
     };
     const sendSlide = async (slide: string, text: string, uploads: Upload[]) => {
-      const made = await call<CommentView>(`${token}/comments`, { method: "POST", json: { slide, region: null, marks: [], text, uploads: uploads.map((u) => u.id) } });
+      const d = draft && draft.slide === slide ? draft : null;
+      const made = await call<CommentView>(`${token}/comments`, { method: "POST", json: { slide, region: d?.region ?? null, marks: d?.marks ?? [], text, draft: d?.id, uploads: uploads.map((u) => u.id) } });
       setComments((prev) => (prev.some((x) => x.id === made.id) ? prev : [...prev, made]));
+      if (d) {
+        setDraft(null);
+        setTool("cursor");
+      }
       store.notify("Comment sent; agents see it in folio status and folio comments");
     };
     const reply = async (cid: string, text: string, uploads: Upload[]) => void (await call(`${token}/comments/${cid}/reply`, { method: "POST", json: { text, uploads: uploads.map((u) => u.id) } }));
