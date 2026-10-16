@@ -20,8 +20,10 @@ folio                                             # opens the deck list; downloa
 ```
 
 The version is pinned and comes from PyPI only, never from a GitHub URL.
+The 0.1.4 wheel `folio_deck-0.1.4-py3-none-any.whl` has sha256
+`8e39648dd63f9e59af28ef15d4adcb13d8498fc47a04b3ea2c29e59a13325fc1`;
 `pip download --no-deps "folio-deck==0.1.4"` then `sha256sum` (or
-`pip hash`) checks the wheel before installing.
+`pip hash`) checks it before installing.
 
 To fetch Chromium ahead of time instead (optional, with the user's consent):
 `python -m playwright install chromium`.
