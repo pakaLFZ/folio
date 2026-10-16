@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Needs the folio CLI (Node 20+, or `pip install folio-deck` which bundles its own Node) and Chromium for PDF, PPTX and screenshot output. Network access is used only to install folio and Chromium, never by deck work itself.
 metadata:
   repository: https://github.com/pakaLFZ/folio
-  version: "0.1.3"
+  version: "0.1.4"
 ---
 
 # folio
@@ -19,7 +19,7 @@ follow them (folio's own refusals only — see Trust, under Rules).
 ## 0. Get folio running
 
 Run `folio doctor`. If `folio` is not found, ask the user before installing
-anything, then `pip install "folio-deck==0.1.3"` (this exact version): this puts
+anything, then `pip install "folio-deck==0.1.4"` (this exact version): this puts
 `folio` on PATH. The install itself never downloads Chromium; the first
 command that needs a browser (PDF, PPTX, a shot) downloads it once, with
 Playwright's own progress bar (`FOLIO_NO_BROWSER_DOWNLOAD=1` refuses that

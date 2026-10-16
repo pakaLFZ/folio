@@ -128,12 +128,12 @@
   Apache-2.0`; `compatibility` naming the folio CLI (Node 20+, or
   `pip install folio-deck`), Chromium for PDF/PPTX/shots, and that network
   access is used only to install; `metadata` with the repository URL and the
-  shipped version (`0.1.3`). `name` and `description` are unchanged except
+  shipped version (`0.1.4`). `name` and `description` are unchanged except
   for tightening; `description` still triggers on folio and slide-deck
   tasks.
 - Installing: `folio` missing is an ask-first step, never a silent install.
   The skill's own text (`SKILL.md`, `references/install.md`) names only the
-  PyPI package, `pip install "folio-deck==0.1.3"` (or newer) — no
+  PyPI package, `pip install "folio-deck==0.1.4"` (or newer) — no
   `github.com` URL, no npm tgz route, no `git clone`; those stay in the
   repository's own `README.md` for a human to read, not for an agent to run
   unasked. Chromium is never downloaded by the install itself: the first
@@ -185,7 +185,7 @@
   install via npm).
 - Fixes:
   - **Install**: the skill's own text names only `pip install
-    "folio-deck==0.1.3"` (PyPI), installed only once the user agrees; no
+    "folio-deck==0.1.4"` (PyPI), installed only once the user agrees; no
     `github.com` URL and no npm tgz route anywhere in `SKILL.md` or
     `references/` (the repository `README.md` keeps both, for a human).
     Chromium is Playwright's own first-use download (`FOLIO_NO_BROWSER_
